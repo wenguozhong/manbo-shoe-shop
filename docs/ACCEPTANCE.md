@@ -22,5 +22,8 @@
 
 ## 发布记录
 
-GitHub 目标为 `wenguozhong/manbo-shoe-shop` 的 `main`。Cloudflare 自定义域名为 `shop.manbomanbo.top`。正式发布状态以实际部署和域名响应为准，操作说明见 [Cloudflare Pages 部署](DEPLOY_CLOUDFLARE.md)。
+- 源码版本 `4754aa47e4a64e7dfffb3d3ae154dbe9b94d3b45` 已推送，远端 main 的 SHA 经 Git 核对一致。[GitHub 源码版本](https://github.com/wenguozhong/manbo-shoe-shop/commit/4754aa47e4a64e7dfffb3d3ae154dbe9b94d3b45)
+- GitHub 收到 `Workers Builds: manbo-shoe-shop` 成功回执。这个现有集成属于 Workers。回执中没有 Pages 部署地址。
+- 截至 2026-11-12 01:22（北京时间），正式域名已解析，HTTPS 首页、系列、产品、工作室、购物袋返回 HTTP 404。原博客首页返回 HTTP 200。
+- Cloudflare Pages 状态为 **NOT DEPLOYED: MANUAL ACTION REQUIRED**。当前可操作的控制台会话停在登录页。接手时先确认鞋站子域名现有绑定，再依照[发布步骤](DEPLOY_CLOUDFLARE.md)连接 Pages、绑定域名，并从真实网址核对静态资源、HTTPS 与深层链接。已通过的本地测试无需重跑。
 

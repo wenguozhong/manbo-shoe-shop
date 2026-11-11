@@ -2,6 +2,8 @@
 
 这个鞋站使用独立源码仓库，生产分支为 `main`。Cloudflare Pages 从 GitHub 构建 Vite 应用并托管静态资源。发布成功后可以关闭开发电脑。[鞋站 GitHub 仓库](https://github.com/wenguozhong/manbo-shoe-shop)
 
+截至本轮交付，独立仓库已有 main。该仓库在 GitHub 上出现了现有的 **Workers Builds: manbo-shoe-shop** 成功检查，Pages 仍需通过控制台核实。若沿用计划书中的 Pages 路径，在下面第 2 节明确选择 **Pages**，先用实际分配的 pages.dev 地址确认站点可用，再打开第 3 节处理 shop 的现有绑定和证书。若显示这个子域名已经绑定到其他服务，先在控制台辨认对应项目；对接手者而言，需要迁移的范围只有鞋站子域名。
+
 ## 1. 准备生产分支
 
 在鞋站项目目录操作。GitHub 的 `main` 应包含 `package.json`、`package-lock.json`、`.node-version`、`index.html`、`src/` 与 `public/`。已推送代码的情况下直接进入下一步。更新已有本地提交时，先确认仓库地址，然后推送。
