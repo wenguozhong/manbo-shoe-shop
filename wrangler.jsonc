@@ -1,0 +1,14 @@
+{
+  "name": "manbo-shoe-shop",
+  "compatibility_date": "2026-11-11",
+  "build": {
+    "command": "npm run build"
+  },
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "shop.manbomanbo.top", "custom_domain": true }
+  ]
+}

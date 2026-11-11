@@ -66,8 +66,8 @@ E2E 针对正式构建启动本地预览。默认优先使用 Windows 安装的 
 ## 交付与发布
 
 - 独立仓库 [wenguozhong/manbo-shoe-shop](https://github.com/wenguozhong/manbo-shoe-shop)，生产分支 `main`。
-- 正式展示目标为 `shop.manbomanbo.top`。Cloudflare Pages 从 GitHub 自动构建并托管 `dist/`，完成发布后本地开发机可以关机。原博客使用单独仓库。
-- [Cloudflare Pages 发布设置及域名绑定](docs/DEPLOY_CLOUDFLARE.md) · [最终验收与发布记录](docs/ACCEPTANCE.md) · [素材与许可](CREDITS.md)。
+- 正式域名为 `shop.manbomanbo.top`。Cloudflare Workers Builds 连接 GitHub，按 `wrangler.jsonc` 构建并发布 `dist/` 静态资源。日常托管由 Cloudflare 提供。
+- [Workers 静态发布与域名设置](docs/DEPLOY_CLOUDFLARE.md) · [最终验收与发布记录](docs/ACCEPTANCE.md) · [素材与许可](CREDITS.md)。
 
 ## 演示边界
 
