@@ -25,3 +25,13 @@
 - 源码版本 `4754aa47e4a64e7dfffb3d3ae154dbe9b94d3b45` 已推送，远端 main 的 SHA 经 Git 核对一致。[GitHub 源码版本](https://github.com/wenguozhong/manbo-shoe-shop/commit/4754aa47e4a64e7dfffb3d3ae154dbe9b94d3b45)
 - 2026-11-12 01:22（北京时间）首次推送后的域名基线为 HTTP 404，原博客返回 HTTP 200。随后项目负责人选定现有 Workers Builds，仅发布静态资源。发布流程见 [Workers 静态发布](DEPLOY_CLOUDFLARE.md)。
 
+### 正式站已上线
+
+2026-11-12 07:36（北京时间）使用真实 Chrome 从正式 HTTPS 域名验收。首次通过线上验收的发布提交为 `cf27fcf6ed00379653d7a3b7a4536f36680849ce`。Cloudflare Workers Builds 构建 `6bc6b9e0-7bda-4a62-b4f6-9c814c298aef` 成功，版本为 `c40101ea-3a8a-4c1f-a57f-1ec3833c67b3`。[正式首页](https://shop.manbomanbo.top/) · [线上工作室](https://shop.manbomanbo.top/customize?color=volt) · [部署源码](https://github.com/wenguozhong/manbo-shoe-shop/commit/cf27fcf6ed00379653d7a3b7a4536f36680849ce)
+
+| 线上检查 | 结果 |
+| --- | --- |
+| HTTPS 路由 | 首页、系列、产品、工作室和购物袋均从地址栏直达，HTTP 200，显示各自页面标题和内容。 |
+| 3D 与刷新 | 工作室以 VOLT 启动，切至 SHADOW 后刷新，WebGL 画布再次就绪，SHADOW 仍选中。 |
+| 静态资源 | 浏览器读取 27 个成功资源 URL，首页主图解码完成，字体就绪。远端电蓝商品图 SHA-256 与本地原图相同。未观察到页面运行异常或同源资源 HTTP 错误。 |
+| 原博客 | 根域名首页经 HTTPS 返回 200，标题为「Manbo 的博客」。 |
