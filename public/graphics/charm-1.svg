@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">MOTION</title>
+  <desc id="desc">折返加速的金属箭翼</desc>
+  <defs>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="83%" y2="100%">
+      <stop stop-color="#FAFAF8"/><stop offset=".3" stop-color="#E8EAE6"/>
+      <stop offset=".54" stop-color="#B8BCB9"/><stop offset=".76" stop-color="#F2F3EE"/><stop offset="1" stop-color="#A2A6A4"/>
+    </linearGradient>
+    <path id="body" d="M16.8 52.1c15.9-4.1 34-14.2 57.6-24.1 1.5-.7 2.8.8 1.8 2.2L63.6 46.3l14.6-3.2c1.5-.3 2.3 1.1 1.4 2.2L59.1 64.1l8.8-.1c1.4 0 2 1.4.8 2.3L38.3 83c-1.9.8-3.1-.4-2.3-2.2l9.4-17.7-15.7 3.1c-1.4.3-2.3-1.2-1.2-2.4l9.9-9-20.7.1c-1.9 0-2.5-2.3-.9-2.8Z"/>
+  </defs>
+  <g stroke-linejoin="round">
+    <use href="#body" transform="translate(1.3 2)" fill="#6C706E" stroke="#282B2C" stroke-width="1.8"/>
+    <path fill="url(#silver)" fill-rule="evenodd" stroke="#333738" stroke-width="1.5" d="M41.7 42.1V29.2a6.3 6.3 0 0 1 12.6 0v12.9Z M48 26.5a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4Z"/>
+    <use href="#body" fill="url(#silver)" stroke="#292C2D" stroke-width="1.65"/>
+    <path d="m21 52.7 48-19.1-26 17.8Z" fill="#F8F8F6"/>
+    <path d="m42.1 53.4 30.2-20.8L58 49.9l13.5-3.2L50.8 61l8.4-11.3z" fill="#A6AAA9"/>
+    <path d="m31.8 63.2 12.1-10.1m-5.4 25.6 8.8-16.6 10.7-2.3" fill="none" stroke="#656968" stroke-width="1.15" stroke-linejoin="round"/>
+    <path d="M47.5 65.1 41 75.9l15.7-9.6" fill="none" stroke="#FAFAF7" stroke-width="1.2"/>
+    <g fill="none" transform="rotate(16 48 18.7)">
+      <ellipse cx="48" cy="18.7" rx="6.4" ry="11.9" stroke="#303436" stroke-width="4"/>
+      <ellipse cx="48" cy="18.7" rx="6.4" ry="11.9" stroke="#B5BAB8" stroke-width="1.9"/>
+      <path d="M41.8 18.2c.2-5.1 2.3-10 5.7-11.2" stroke="#F9FAF7" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M51.8 27.6c-1 1.8-2.6 2.9-4.2 2.9" stroke="#F9FAF7" stroke-width="1.05" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

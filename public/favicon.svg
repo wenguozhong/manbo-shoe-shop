@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-labelledby="title">
+  <title id="title">idc.</title>
+  <rect width="48" height="48" rx="8" fill="#1533E8"/>
+  <path transform="translate(5.1) skewX(-10)" fill="#FFF" d="M11 7h12v8H11z M11 19h12v21H11z M27 30h10v10H27z"/>
+</svg>

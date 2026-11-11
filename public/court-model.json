@@ -1,0 +1,14 @@
+{
+  "id": "court-01",
+  "source": "procedural",
+  "partMap": {
+    "upper": ["upper_main"],
+    "toe": ["toe_panel"],
+    "heel": ["heel_counter"],
+    "tongue": ["tongue_main"],
+    "laces": ["laces_main"],
+    "midsole": ["midsole_main"],
+    "outsole": ["outsole_main"],
+    "accent": ["side_accent"]
+  }
+}
