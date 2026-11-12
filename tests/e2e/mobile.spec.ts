@@ -1,5 +1,15 @@
 import { test, expect } from '@playwright/test'
-import { changed, completeImages, config, frame, noOverflow, noteErrors, ready, shot } from './helpers'
+import {
+  changed,
+  completeImages,
+  config,
+  expectEnglishPage,
+  frame,
+  noOverflow,
+  noteErrors,
+  ready,
+  shot,
+} from './helpers'
 
 test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 })
 test('mobile navigation, real touch orbit and pinch, full four-step design and saved bag', async ({
@@ -11,12 +21,14 @@ test('mobile navigation, real touch orbit and pinch, full four-step design and s
   await completeImages(page)
   await noOverflow(page)
   await shot(page, 'home-mobile')
-  await page.getByRole('button', { name: '打开菜单 Menu' }).tap()
+  await page.getByRole('button', { name: 'Open menu' }).tap()
   await expect(page.getByRole('dialog')).toBeVisible()
+  await expectEnglishPage(page)
   await page.getByRole('link', { name: 'Customize', exact: true }).last().tap()
   await ready(page)
   await noOverflow(page)
   await shot(page, 'studio-mobile')
+  await expectEnglishPage(page)
   const canvas = page.locator('.viewer canvas'),
     box = (await canvas.boundingBox())!
   const x = Math.round(box.x + box.width * 0.49),
@@ -47,14 +59,16 @@ test('mobile navigation, real touch orbit and pinch, full four-step design and s
   await touch('touchEnd', [])
   await changed(page, second)
   await page.getByRole('button', { name: 'SHADOW', exact: true }).tap()
-  await page.getByRole('button', { name: '下一步 · DETAILS' }).tap()
+  await page.getByRole('button', { name: 'Next / DETAILS' }).tap()
+  await expectEnglishPage(page)
   await page.getByRole('button', { name: 'ROPE', exact: true }).tap()
-  await page.getByRole('button', { name: '下一步 · PERSONALIZE' }).tap()
-  await page.getByRole('textbox', { name: '鞋侧文字' }).fill('球场')
-  await page.getByRole('button', { name: '下一步 · REVIEW' }).tap()
+  await page.getByRole('button', { name: 'Next / PERSONALIZE' }).tap()
+  await expectEnglishPage(page)
+  await page.getByRole('textbox', { name: 'Side lettering' }).fill('球场')
+  await page.getByRole('button', { name: 'Next / REVIEW' }).tap()
   await expect(page.locator('.config-table').first()).toContainText('球场')
-  await page.getByRole('button', { name: '加入演示购物袋' }).tap()
-  await page.getByRole('link', { name: '查看购物袋' }).tap()
+  await page.getByRole('button', { name: 'Add to demo bag' }).tap()
+  await page.getByRole('link', { name: 'View bag' }).tap()
   await noOverflow(page)
   await expect(page.locator('.bag-details')).toContainText('球场')
   await page.goto('/customize?color=unknown')

@@ -27,26 +27,26 @@ export function decode(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const image = new Image()
     image.onload = () => resolve(image)
-    image.onerror = () => reject(new Error('图片内容无法解码。'))
+    image.onerror = () => reject(new Error('This image could not be opened.'))
     image.src = src
   })
 }
 export async function importJson(file: File) {
-  if (file.size > maxJsonBytes) throw new Error('JSON 文件超过 1 MB。')
+  if (file.size > maxJsonBytes) throw new Error('The JSON file exceeds the 1 MB limit.')
   const config = parseConfig(await file.text())
   if (config.artwork) await decode(config.artwork.dataUrl)
   return config
 }
 export async function importArtwork(file: File) {
   if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type))
-    throw new Error('请上传 PNG、JPG 或 WebP 图片。')
-  if (file.size > maxArtworkBytes) throw new Error('图片超过 5 MB。')
+    throw new Error('Choose a PNG, JPG or WebP image.')
+  if (file.size > maxArtworkBytes) throw new Error('The image exceeds the 5 MB limit.')
   const url = URL.createObjectURL(file)
   try {
     const image = await decode(url),
       canvas = document.createElement('canvas'),
       ctx = canvas.getContext('2d')
-    if (!ctx) throw new Error('此浏览器无法处理图片。')
+    if (!ctx) throw new Error('This browser could not process the image.')
     let maxDim = 420
     for (;;) {
       const scale = Math.min(1, maxDim / Math.max(image.width, image.height))

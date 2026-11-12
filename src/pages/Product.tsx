@@ -24,7 +24,7 @@ export default function Product() {
   return (
     <>
       <div className="wrap product-page">
-        <nav className="crumbs" aria-label="当前位置">
+        <nav className="crumbs" aria-label="Breadcrumb">
           <Link to="/collection">COLLECTION</Link>
           <ChevronRight size={12} /> COURT 01
         </nav>
@@ -34,7 +34,13 @@ export default function Product() {
               <Box size={14} /> 3D PRODUCT VIEW
             </span>
             <Suspense
-              fallback={<img className="product-poster" src={productImage(color)} alt={variant.title} />}
+              fallback={
+                <img
+                  className="product-poster"
+                  src={productImage(color)}
+                  alt={variant.name + ' in ' + variant.tone}
+                />
+              }
             >
               <Viewer ref={viewer} config={config} view={view} revision={revision} />
             </Suspense>
@@ -72,8 +78,8 @@ export default function Product() {
               <b>{variant.name}</b>
               <span>{variant.tone}</span>
             </div>
-            <p>{variant.zh}</p>
-            <div className="product-swatches" aria-label="产品配色">
+            <p>{variant.description}</p>
+            <div className="product-swatches" aria-label="Product colorways">
               {variants.map((v) => (
                 <button key={v.id} aria-pressed={v.id === color} onClick={() => select(v.id)}>
                   <i style={{ background: v.chips[0] }} />
@@ -81,7 +87,7 @@ export default function Product() {
                 </button>
               ))}
             </div>
-            <Options label="演示尺码 / EU" items={sizes} value={size} select={setSize} />
+            <Options label="Size / EU (demo)" items={sizes} value={size} select={setSize} />
             <Link className="action" to={'/customize?color=' + color + '&size=' + size}>
               CUSTOMIZE YOUR PAIR <ArrowRight size={16} />
             </Link>
@@ -94,34 +100,41 @@ export default function Product() {
               <span>ADD TO DEMO BAG</span>
               <ShoppingBag size={16} />
             </button>
-            <small>学生商赛拟议联名 · 尺码为演示选项</small>
+            <small>Student collaboration proposal. Sizes are for preview only.</small>
             <button className="text-link" onClick={() => setMacro(true)}>
-              放大鞋带与针脚细节 <ArrowRight size={14} />
+              View lacing and stitching up close <ArrowRight size={14} />
             </button>
           </div>
         </section>
         {macro && (
           <Dialog title="Craft study" onClose={() => setMacro(false)}>
-            <img src="/images/detail.webp" alt="概念材质特写，蓝色麂皮鞋眼、鞋带纤维与奶白色皮革针脚" />
-            <p>电蓝鞋眼饰片与浅色面料相接。放大可见鞋面针脚和鞋带纤维的方向。</p>
+            <img
+              src="/images/detail.webp"
+              alt="Close-up of blue suede eyelets, woven laces and stitching on ivory leather"
+            />
+            <p>
+              The electric blue eyestay meets the pale upper. Look closely to see the direction of the
+              stitching and the weave of the laces.
+            </p>
           </Dialog>
         )}
         <div className="product-story">
           {[
             [
               'DETAILS',
-              '细节由你定义',
-              '低帮轮廓承托八个独立部件。鞋侧可放入你的文字或纹样，鞋舌、鞋垫、后跟与鞋底各自保留概念字标。',
+              'Details you can customize',
+              'This low-top has eight editable parts. Add lettering or graphics to the sides and turn the shoe to find the concept marks on the tongue, insole, heel and outsole.',
             ],
             [
               'DESIGN STORY',
-              '把球场带到街头',
-              hook + ' 球场的转向与日常的步伐，共同决定了 COURT 01 干净的轮廓。',
+              'From the court to the street',
+              hook +
+                ' The quick turns of tennis and the pace of a daily walk shaped the clean profile of Court 01.',
             ],
             [
               'GIFT EXPERIENCE',
-              '打开鞋盒的瞬间',
-              '鞋盒内附一枚随机鞋带挂件和概念印签香卡。常规与隐藏款的揭晓留到开盒时。',
+              'Inside the shoebox',
+              'The concept box pairs a printed scent card with one lace charm. The charm is a surprise, drawn from five regular designs and two hidden editions.',
             ],
           ].map(([k, t, p]) => (
             <div key={k}>

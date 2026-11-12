@@ -12,7 +12,7 @@ const filenames = variants.map((color) => 'court-01-' + color + '.webp')
 const directory = await mkdtemp(join(root, '.catalog-render-'))
 const entry = join(directory, 'index.html')
 const pageSource = `<!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <link rel="icon" href="data:,">

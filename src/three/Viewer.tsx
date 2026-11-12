@@ -205,10 +205,15 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
   )
   const fallback = (
     <div className="viewer-fallback">
-      <img src={productImage(config.colorway)} alt={'基础配色二维参考 ' + config.colorway} />
+      <img
+        src={productImage(config.colorway)}
+        alt={'2D preview of the ' + config.colorway.toUpperCase() + ' colorway'}
+      />
       <div>
-        <b>2D 配色参考</b>
-        <span>此设备的 3D 预览暂不可用。仍可编辑、保存和导出配置。</span>
+        <b>2D colorway preview</b>
+        <span>
+          The 3D preview is unavailable on this device. You can still edit, save and export your design.
+        </span>
         <button
           onClick={() => {
             setReady(false)
@@ -216,7 +221,7 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
             setGeneration((x) => x + 1)
           }}
         >
-          <RotateCcw size={13} /> 重试 3D
+          <RotateCcw size={13} /> Retry 3D
         </button>
       </div>
     </div>
@@ -225,7 +230,7 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
     <div
       className="viewer"
       data-ready={ready && !lost ? 'true' : 'false'}
-      aria-label="球鞋三维视窗"
+      aria-label="3D sneaker preview"
       data-view={view}
     >
       {lost ? (

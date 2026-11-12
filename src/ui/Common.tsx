@@ -102,7 +102,7 @@ export function Dialog({
     >
       <div className="dialog-head">
         <h2 id="dialog-title">{title}</h2>
-        <IconBtn label="关闭 Close" onClick={onClose}>
+        <IconBtn label="Close" onClick={onClose}>
           <X />
         </IconBtn>
       </div>
@@ -129,16 +129,16 @@ export function ProductCard({ variant: v }: { variant: (typeof variants)[number]
       <Link
         className="card-photo"
         to={'/product/court-01?color=' + v.id}
-        aria-label={'查看 COURT 01 ' + v.name}
+        aria-label={'View COURT 01 ' + v.name}
       >
-        <img loading="lazy" src={productImage(v.id)} alt={'IDC COURT 01 · ' + v.title} />
+        <img loading="lazy" src={productImage(v.id)} alt={'IDC COURT 01 in ' + v.tone} />
         <span className="card-arrow">
           <ArrowUpRight size={18} />
         </span>
       </Link>
       <div className="card-meta">
         <span>IDC COURT 01</span>
-        <span className="chips" aria-label={v.title}>
+        <span className="chips" aria-label={v.tone}>
           {v.chips.map((c) => (
             <i key={c} style={{ background: c }} />
           ))}
@@ -147,9 +147,7 @@ export function ProductCard({ variant: v }: { variant: (typeof variants)[number]
       <Link to={'/product/court-01?color=' + v.id}>
         <h3>{v.name}</h3>
       </Link>
-      <p>
-        {v.tone} <span>／ {v.title}</span>
-      </p>
+      <p>{v.tone}</p>
       <TextLink to={'/customize?color=' + v.id}>CUSTOMIZE</TextLink>
     </article>
   )
@@ -166,9 +164,10 @@ export function Gifts() {
             <em>matter.</em>
           </h2>
           <p className="body-copy">
-            每份概念鞋盒附一枚随机鞋带挂件和一张概念印签香卡。五款常规设计，两款隐藏轮廓。
+            Each concept shoebox includes a printed scent card and one surprise lace charm, drawn from
+            five regular designs and two hidden editions.
           </p>
-          <small>概念赠品设计，以最终合作方案为准。</small>
+          <small>Gift designs are part of the collaboration proposal.</small>
         </div>
         <div className="gift-tray">
           {giftNames.map((name, i) => (
@@ -186,7 +185,7 @@ export function Gifts() {
                 EDITION
               </small>
             </div>
-            <figcaption>香卡 / SCENT CARD</figcaption>
+            <figcaption>SCENT CARD</figcaption>
           </figure>
         </div>
       </div>

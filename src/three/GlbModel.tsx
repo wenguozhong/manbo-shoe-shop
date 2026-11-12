@@ -68,7 +68,7 @@ function prepare(source: Group, map: Definition['partMap']): Loaded {
   }
   if (!Number.isFinite(size.x) || size.x < 0.00001 || mapped.size === 0) {
     dispose()
-    throw new Error('模型尺寸或部件映射无效')
+    throw new Error('The model size or part mapping is invalid.')
   }
   const factor = 3.6 / size.x
   const frame = new Group()
@@ -168,11 +168,15 @@ export default function ModelAdapter({
         return
       }
       const missing = partIds.filter((id) => ![...asset!.mapped.values()].includes(id))
-      onReport(missing.length ? '部分网格未映射，对应部件不可编辑。' : '', missing)
+      onReport(missing.length ? 'Some parts of this model are unavailable for editing.' : '', missing)
       setLoaded(asset)
     }
     load().catch(() => {
-      if (active) onReport('外部模型未能载入，已切换至原创低帮鞋。', [])
+      if (active)
+        onReport(
+          'The external model could not load. You can continue with the original Court 01 low-top.',
+          [],
+        )
     })
     return () => {
       active = false

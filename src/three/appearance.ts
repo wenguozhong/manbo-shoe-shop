@@ -29,7 +29,7 @@ function canvasMap(width: number, height: number) {
 
 function context(texture: CanvasTexture) {
   const ctx = (texture.image as HTMLCanvasElement).getContext('2d')
-  if (!ctx) throw new Error('无法创建球鞋表面纹理')
+  if (!ctx) throw new Error('Unable to create the shoe texture.')
   return ctx
 }
 

@@ -8,7 +8,7 @@ import type { Colorway } from '../domain/config'
 const campaign = [
   {
     image: '/images/hero.webp',
-    alt: '匿名网球运动员在光影交错的球场挥拍',
+    alt: 'A tennis player swings a racket across a sunlit court',
     lines: ['THE COURT', 'IS ONLY THE', 'BEGINNING.'],
     label: 'COURT CULTURE',
     caption: 'Sport is the start. Style is yours.',
@@ -18,7 +18,7 @@ const campaign = [
   },
   {
     image: '/images/detail.webp',
-    alt: '低帮鞋的鞋带与缝线细节',
+    alt: 'Laces and stitching on a Court 01 low-top',
     lines: ['BUILT TO', 'MOVE. MADE', 'TO BE YOURS.'],
     label: 'DESIGN STUDY',
     caption: 'The Queen’s Craft / IDC Court 01.',
@@ -28,7 +28,7 @@ const campaign = [
   },
   {
     image: '/images/journal-style.webp',
-    alt: '从球场到街头的穿搭',
+    alt: 'Low-top sneakers styled for the street',
     lines: ['YOUR PAIR.', 'YOUR', 'STORY.'],
     label: 'STREET STYLE',
     caption: 'From court energy to everyday culture.',
@@ -41,7 +41,7 @@ function Hero() {
   const [index, setIndex] = useState(0),
     item = campaign[index]
   return (
-    <section className="hero" aria-roledescription="carousel" aria-label="品牌系列">
+    <section className="hero" aria-roledescription="carousel" aria-label="Campaign highlights">
       <img
         className={'hero-photo slide-' + index}
         src={item.image}
@@ -76,7 +76,7 @@ function Hero() {
           <div className="edition">
             <span className="index-line" />
             <span>THE QUEEN’S CRAFT</span>
-            <b>／</b>
+            <b>/</b>
             <span>IDC COURT 01</span>
           </div>
           <div className="slide-controls">
@@ -84,10 +84,10 @@ function Hero() {
               0{index + 1}
               <small> / 03</small>
             </span>
-            <button aria-label="上一张主题图" onClick={() => setIndex((index + 2) % 3)}>
+            <button aria-label="Previous slide" onClick={() => setIndex((index + 2) % 3)}>
               <ChevronLeft size={17} />
             </button>
-            <button aria-label="下一张主题图" onClick={() => setIndex((index + 1) % 3)}>
+            <button aria-label="Next slide" onClick={() => setIndex((index + 1) % 3)}>
               <ChevronRight size={17} />
             </button>
           </div>
@@ -129,13 +129,14 @@ function Teaser() {
             <em>Your rules.</em>
           </h2>
           <p className="body-copy">
-            从一种配色开始。挑选材质、编辑鞋侧文字，在可旋转的 3D 鞋款上留下你的记号。
+            Start with a colorway. Choose your materials, add lettering to the side panel and turn the
+            shoe to see your design from every angle.
           </p>
           <Action to={'/customize?color=' + color}>ENTER THE DESIGN STUDIO</Action>
         </div>
         <div className="teaser-preview">
-          <img loading="lazy" src={productImage(color)} alt={'工作室配色预览 ' + color} />
-          <div className="preview-choices" aria-label="预览配色">
+          <img loading="lazy" src={productImage(color)} alt={'Court 01 in ' + color.toUpperCase()} />
+          <div className="preview-choices" aria-label="Preview a colorway">
             {variants.map((v) => (
               <button key={v.id} aria-pressed={color === v.id} onClick={() => setColor(v.id)}>
                 <i style={{ background: v.chips[0] }} />
@@ -165,12 +166,19 @@ export default function Home() {
               <br />
               COURT 01<span className="blue">.</span>
             </h2>
-            <p className="body-copy">从球场走向街头。一双低帮板鞋，留给你重新定义每个细节。</p>
+            <p className="body-copy">
+              A court-inspired low-top for the street, with details you can change from the laces to the
+              sole.
+            </p>
             <TextLink to="/product/court-01">VIEW THE PRODUCT</TextLink>
           </div>
           <Link to="/product/court-01?color=volt" className="signature-photo">
-            <img loading="lazy" src={productImage('volt')} alt="IDC COURT 01 电蓝配色三维渲染" />
-            <span>VOLT ／ ELECTRIC BLUE</span>
+            <img
+              loading="lazy"
+              src={productImage('volt')}
+              alt="Three-quarter view of the electric blue IDC COURT 01"
+            />
+            <span>VOLT / ELECTRIC BLUE</span>
             <ArrowUpRight />
           </Link>
           <Link to="/journal/making-court-01" className="signature-detail">
@@ -190,7 +198,7 @@ export default function Home() {
           <h2 className="display subhead">
             Choose your <em>colorway.</em>
           </h2>
-          <span className="muted">同一鞋型，三种起点。</span>
+          <span className="muted">One silhouette. Three starting points.</span>
         </div>
         <div className="product-grid">
           {variants.map((v) => (
@@ -232,7 +240,11 @@ export default function Home() {
         <JournalCards />
       </section>
       <section className="statement">
-        <img loading="lazy" src="/images/journal-court.webp" alt="黑白球场与球网" />
+        <img
+          loading="lazy"
+          src="/images/journal-court.webp"
+          alt="Black-and-white view of a tennis court and net"
+        />
         <div className="wrap">
           <p className="overline">A STUDENT CONCEPT / idc.</p>
           <h2 className="display">
@@ -258,7 +270,7 @@ export function Collection() {
         <em>somewhere.</em>
       </h1>
       <div className="filter-bar">
-        <div aria-label="按配色筛选">
+        <div aria-label="Filter by color">
           {['ALL', 'LIGHT', 'BLUE', 'DARK'].map((item) => (
             <button key={item} aria-pressed={filter === item} onClick={() => setFilter(item)}>
               {item}
@@ -319,7 +331,7 @@ export function NotFound() {
       <h1 className="display page-title">
         Off the <em>court.</em>
       </h1>
-      <p>这条路径没有对应的页面。</p>
+      <p>We couldn’t find that page.</p>
       <Action to="/">BACK TO HOME</Action>
     </div>
   )

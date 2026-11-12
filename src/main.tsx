@@ -22,7 +22,7 @@ createRoot(document.getElementById('root')!).render(
     <Suspense
       fallback={
         <div className="app-loading" role="status">
-          正在载入页面…
+          Loading page…
         </div>
       }
     >

@@ -104,7 +104,7 @@ svg {
 }
 .muted,
 .body-copy,
-.intro-cn {
+.story-intro {
   color: var(--muted);
 }
 .body-copy {
@@ -608,10 +608,6 @@ svg {
 .product-card > p {
   font-size: 13px;
 }
-.product-card > p span {
-  color: var(--muted);
-  font-size: 12px;
-}
 .product-card > .text-link {
   margin-top: 8px;
 }
@@ -1037,7 +1033,7 @@ svg {
   line-height: 1.95;
   margin-bottom: 22px;
 }
-.intro-cn {
+.story-intro {
   margin: -12px 0 32px;
   font-size: 16px;
 }
@@ -1398,9 +1394,6 @@ svg {
     right: 6px;
     bottom: 6px;
   }
-  .product-card > p span {
-    display: none;
-  }
   .note-section,
   .gift-layout,
   .story-detail {
@@ -1547,9 +1540,6 @@ svg {
   }
   .product-card h3 {
     font-size: 36px;
-  }
-  .product-card > p span {
-    display: inline;
   }
   .card-meta {
     margin-top: 11px;

@@ -29,12 +29,12 @@ export function BasePanel({
   return (
     <>
       <Options
-        label="基础轮廓"
+        label="Silhouette"
         items={['classic-low', 'bold-low'] as const}
         value={config.silhouette}
         select={(silhouette) => update({ silhouette })}
       />
-      <Field label="基础配色">
+      <Field label="Base colorway">
         <div className="variant-picks">
           {variants.map((v) => (
             <button
@@ -49,7 +49,10 @@ export function BasePanel({
           ))}
         </div>
       </Field>
-      <Field label="选择部件" hint="点选鞋身或下方部位，单独调整它的颜色和材质。">
+      <Field
+        label="Shoe part"
+        hint="Select a part on the shoe or below to change its color and material."
+      >
         <div className="part-grid">
           {partIds.map((p) => (
             <button
@@ -67,12 +70,12 @@ export function BasePanel({
       {selected && !missing.includes(selected) && (
         <>
           <ColorField
-            label={partLabels[selected] + '颜色'}
+            label={partLabels[selected] + ' color'}
             color={config.parts[selected].color}
             change={(color) => modify(selected, { color })}
           />
           <Options
-            label={partLabels[selected] + '材质 · 效果模拟'}
+            label={partLabels[selected] + ' material (preview)'}
             items={materialIds}
             names={materialLabels}
             value={config.parts[selected].material}
@@ -87,20 +90,20 @@ export function DetailsPanel({ config, update, showTongue }: { showTongue: () =>
   return (
     <>
       <Options
-        label="鞋带样式"
+        label="Lace style"
         items={['flat', 'rope', 'contrast'] as const}
         value={config.laceType}
         select={(laceType) => update({ laceType })}
       />
       <ColorField
-        label="鞋带颜色"
+        label="Lace color"
         color={config.parts.laces.color}
         change={(color) =>
           update({ parts: { ...config.parts, laces: { ...config.parts.laces, color } } })
         }
       />
       <Options
-        label="鞋舌内侧 · 概念签名字样"
+        label="Inside tongue lettering"
         items={['none', 'script-a', 'script-b'] as const}
         names={{ none: 'NO SCRIPT' }}
         value={config.tongueScript}
@@ -110,10 +113,11 @@ export function DetailsPanel({ config, update, showTongue }: { showTongue: () =>
         }}
       />
       <p className="panel-note">
-        Concept signature style · 原创字体效果。外鞋舌展示 idc. × QINWEN 概念排版。
+        Choose an original script style for the inside of the tongue. The outer tongue carries the idc. ×
+        QINWEN concept mark.
       </p>
       <Options
-        label="演示尺码 / EU"
+        label="Size / EU (demo)"
         items={sizes}
         value={config.size}
         select={(size) => update({ size })}
@@ -130,20 +134,24 @@ export function PersonalPanel({ config, update, notify }: { notify: (v: string) 
     setBusy(true)
     try {
       update({ artwork: await importArtwork(file) })
-      notify('图案已添加，可调整位置和大小。')
+      notify('Artwork added. Adjust its position and size below.')
     } catch (error) {
-      notify(error instanceof Error ? error.message : '图案读取失败。')
+      notify(
+        error instanceof Error && !(error instanceof DOMException)
+          ? error.message
+          : 'Could not read the artwork file.',
+      )
     } finally {
       setBusy(false)
     }
   }
   return (
     <>
-      <Field label="鞋侧文字">
+      <Field label="Side lettering">
         <div className="text-input">
           <input
-            aria-label="鞋侧文字"
-            placeholder="你的文字 / YOUR MARK"
+            aria-label="Side lettering"
+            placeholder="Your lettering"
             value={config.sideText}
             onChange={(e) => update({ sideText: cleanSideText(e.target.value) })}
           />
@@ -151,40 +159,37 @@ export function PersonalPanel({ config, update, notify }: { notify: (v: string) 
         </div>
       </Field>
       <Options
-        label="字体"
+        label="Typeface"
         items={['grotesk', 'condensed', 'script'] as const}
         value={config.textFont}
         select={(textFont) => update({ textFont })}
       />
       <ColorField
-        label="文字颜色"
+        label="Lettering color"
         color={config.textColor}
         change={(textColor) => update({ textColor })}
       />
       <Options
-        label="原创图案"
+        label="Graphic"
         items={['none', 'stripe', 'wave', 'star', 'motion'] as const}
         value={config.graphic}
         select={(graphic) => update({ graphic })}
       />
       {config.graphic !== 'none' && (
         <ColorField
-          label="纹样颜色"
+          label="Graphic color"
           color={config.graphicColor}
           change={(graphicColor) => update({ graphicColor })}
         />
       )}
       <Options
-        label="贴花位置"
+        label="Placement"
         items={['outer', 'inner', 'both'] as const}
         value={config.placement}
         select={(placement) => update({ placement })}
       />
       <label className="switch-label">
-        <span>
-          <b>高级定制</b>
-          <small>ADVANCED CUSTOMIZATION</small>
-        </span>
+        <b>Advanced customization</b>
         <input
           type="checkbox"
           checked={config.advanced}
@@ -194,20 +199,25 @@ export function PersonalPanel({ config, update, notify }: { notify: (v: string) 
       </label>
       {config.advanced && (
         <div className="advanced-panel">
-          <p className="panel-note">Premium customization · 增值服务概念，价格待定。</p>
+          <p className="panel-note">
+            Premium finishes are a concept service. Pricing is to be confirmed.
+          </p>
           <Options
-            label="加工方式 · 效果模拟"
+            label="Finish (preview)"
             items={['print', 'embroidery'] as const}
             value={config.craft}
             select={(craft) => update({ craft })}
           />
-          <Field label="本地图案" hint="PNG / JPG / WebP，最多 5 MB。缩小后保存在方案中。">
+          <Field
+            label="Uploaded artwork"
+            hint="Choose a PNG, JPG or WebP file up to 5 MB. A resized copy is saved with your design."
+          >
             <label className="upload-label">
               <ImagePlus size={17} />
-              {busy ? '正在处理…' : '上传图案'}
+              {busy ? 'Processing…' : 'Upload artwork'}
               <input
                 type="file"
-                aria-label="上传图案"
+                aria-label="Upload artwork"
                 accept="image/png,image/jpeg,image/webp"
                 onChange={upload}
                 disabled={busy}
@@ -215,9 +225,9 @@ export function PersonalPanel({ config, update, notify }: { notify: (v: string) 
             </label>
             {config.artwork && (
               <div className="uploaded">
-                <img src={config.artwork.dataUrl} alt="本地图案预览" />
+                <img src={config.artwork.dataUrl} alt="Uploaded artwork preview" />
                 <small>{config.artwork.name}</small>
-                <button aria-label="移除图案" onClick={() => update({ artwork: null })}>
+                <button aria-label="Remove artwork" onClick={() => update({ artwork: null })}>
                   <Trash2 size={15} />
                 </button>
               </div>
@@ -226,11 +236,13 @@ export function PersonalPanel({ config, update, notify }: { notify: (v: string) 
           {config.artwork &&
             (['x', 'y', 'scale'] as const).map((k) => (
               <label className="slider" key={k} htmlFor={'artwork-' + k}>
-                {{ x: '水平位置', y: '垂直位置', scale: '图案缩放' }[k]}
+                {{ x: 'Horizontal position', y: 'Vertical position', scale: 'Artwork scale' }[k]}
                 <output htmlFor={'artwork-' + k}>{config.artworkTransform[k].toFixed(2)}</output>
                 <input
                   id={'artwork-' + k}
-                  aria-label={{ x: '水平位置', y: '垂直位置', scale: '图案缩放' }[k]}
+                  aria-label={
+                    { x: 'Horizontal position', y: 'Vertical position', scale: 'Artwork scale' }[k]
+                  }
                   type="range"
                   min={k === 'scale' ? 0.35 : -1}
                   max={k === 'scale' ? 2 : 1}
@@ -251,14 +263,14 @@ export function PersonalPanel({ config, update, notify }: { notify: (v: string) 
 }
 export function ConfigTable({ config: c, full = true }: { config: ShoeConfig; full?: boolean }) {
   const rows = [
-    ['基础鞋型', c.silhouette.replace('-', ' ').toUpperCase()],
-    ['配色 / 尺码', c.colorway.toUpperCase() + ' / EU ' + c.size],
-    ['鞋带', c.laceType.toUpperCase() + ' · ' + c.parts.laces.color],
-    ['鞋侧文字', c.sideText || '无'],
-    ['图案 / 位置', c.graphic.toUpperCase() + ' / ' + c.placement.toUpperCase()],
-    ['舌内字样', c.tongueScript.toUpperCase()],
-    ['加工', c.advanced ? '高级 / ' + c.craft.toUpperCase() : '标准 DIY'],
-    ['本地图案', c.advanced && c.artwork ? c.artwork.name : '无'],
+    ['Silhouette', c.silhouette.replace('-', ' ').toUpperCase()],
+    ['Colorway / size', c.colorway.toUpperCase() + ' / EU ' + c.size],
+    ['Laces', c.laceType.toUpperCase() + ' · ' + c.parts.laces.color],
+    ['Side lettering', c.sideText || 'None'],
+    ['Graphic / position', c.graphic.toUpperCase() + ' / ' + c.placement.toUpperCase()],
+    ['Tongue lettering', c.tongueScript.toUpperCase()],
+    ['Finish', c.advanced ? 'Premium / ' + c.craft.toUpperCase() : 'Standard customization'],
+    ['Uploaded artwork', c.advanced && c.artwork ? c.artwork.name : 'None'],
   ]
   return (
     <>
@@ -272,7 +284,7 @@ export function ConfigTable({ config: c, full = true }: { config: ShoeConfig; fu
       </dl>
       {full && (
         <details className="part-summary">
-          <summary>查看八个部件的材质与颜色</summary>
+          <summary>View colors and materials for all eight parts</summary>
           <dl className="config-table">
             {partIds.map((p) => (
               <div key={p}>

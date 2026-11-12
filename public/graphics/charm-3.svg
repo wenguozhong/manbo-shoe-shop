@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
   <title id="title">SPARK</title>
-  <desc id="desc">沿折线切面的闪电</desc>
+  <desc id="desc">A lightning bolt with angular facets</desc>
   <defs>
     <linearGradient id="silver" x1="0%" y1="0%" x2="83%" y2="100%">
       <stop stop-color="#FAFAF8"/><stop offset=".3" stop-color="#E8EAE6"/>

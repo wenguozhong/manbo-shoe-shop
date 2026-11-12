@@ -48,7 +48,7 @@ export const useShop = create<Shop>((set, get) => {
       localStorage.setItem(key, JSON.stringify(value))
       return true
     } catch {
-      get().notify('浏览器存储空间不足或不可用。可导出 JSON 保留方案。')
+      get().notify('Browser storage is full or unavailable. Export your design as JSON to keep a copy.')
       return false
     }
   }
@@ -72,14 +72,14 @@ export const useShop = create<Shop>((set, get) => {
       const items = readBag(),
         snapshot = structuredClone(config)
       if (id && !items.some((item) => item.id === id)) {
-        get().notify('这件作品已从购物袋移除，请重新加入。')
+        get().notify('This design was removed from your bag. Add it again to keep it there.')
         return false
       }
       const next = id
         ? items.map((x) => (x.id === id ? { ...x, config: snapshot, preview } : x))
         : [...items, { id: uniqueId(), config: snapshot, qty: 1, preview }]
       if (!updateBag(next)) return false
-      get().notify(id ? '购物袋中的方案已更新。' : '已加入演示购物袋。')
+      get().notify(id ? 'Design updated in your bag.' : 'Added to your demo bag.')
       return true
     },
     quantity: (id, delta) => {
@@ -90,13 +90,13 @@ export const useShop = create<Shop>((set, get) => {
       )
     },
     removeBag: (id) => {
-      if (updateBag(readBag().filter((x) => x.id !== id))) get().notify('已移除这件作品。')
+      if (updateBag(readBag().filter((x) => x.id !== id))) get().notify('Design removed from your bag.')
     },
     saveDesign: (config, preview) => {
       const next = [{ id: uniqueId(), config: structuredClone(config), preview }, ...readDesigns()]
       if (persist(parts.designs, next)) {
         set({ designs: next })
-        get().notify('已保存到 My Designs。')
+        get().notify('Saved to My Designs.')
       }
     },
     deleteDesign: (id) => {

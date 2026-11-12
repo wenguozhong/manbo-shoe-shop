@@ -11,13 +11,23 @@ const nav = [
   ['/story', 'The story'],
   ['/journal', 'Journal'],
 ]
+const pageTitles: Record<string, string> = {
+  '/': 'The Queen’s Craft',
+  '/collection': 'Collection',
+  '/product/court-01': 'IDC COURT 01',
+  '/customize': 'Sneaker Studio',
+  '/bag': 'My Bag',
+  '/story': 'The Story',
+  '/journal': 'Journal',
+  '/concept-notice': 'Concept Notice',
+}
 type Overlay = 'search' | 'saved' | 'menu' | 'faq' | null
 function Finder({ close }: { close: () => void }) {
   const [q, setQ] = useState('')
   const options = [
     ...variants.map((x) => ({
       title: 'COURT 01 / ' + x.name,
-      desc: x.tone + ' ' + x.title,
+      desc: x.tone,
       url: '/product/court-01?color=' + x.id,
     })),
     ...articles.map((x) => ({
@@ -35,8 +45,8 @@ function Finder({ close }: { close: () => void }) {
         <Search size={18} />
         <input
           autoFocus
-          aria-label="搜索鞋款或文章"
-          placeholder="搜索配色、鞋款或文章"
+          aria-label="Search sneakers and stories"
+          placeholder="Search colorways, sneakers or stories"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -51,7 +61,7 @@ function Finder({ close }: { close: () => void }) {
             <ArrowUpRight size={18} />
           </Link>
         ))}
-        {!matches.length && <p>没有匹配项，试试 VOLT 或「场」。</p>}
+        {!matches.length && <p>No matches. Try “Volt” or “court”.</p>}
       </div>
     </>
   )
@@ -65,15 +75,15 @@ function Saved({ close }: { close: () => void }) {
       {!designs.length && (
         <div className="dialog-empty">
           <Bookmark />
-          <p>你保存的设计会出现在这里。</p>
+          <p>Your saved designs will appear here.</p>
           <Link to="/customize" className="text-link" onClick={close}>
-            进入工作室 <ArrowRight size={16} />
+            Open the studio <ArrowRight size={16} />
           </Link>
         </div>
       )}
       {designs.map((d) => (
         <div className="saved-row" key={d.id}>
-          <img src={d.preview || productImage(d.config.colorway)} alt="鞋款预览" />
+          <img src={d.preview || productImage(d.config.colorway)} alt="Saved sneaker design" />
           <button
             className="saved-name"
             onClick={() => {
@@ -85,9 +95,9 @@ function Saved({ close }: { close: () => void }) {
             <small>
               {d.config.colorway.toUpperCase()} / EU {d.config.size}
             </small>
-            <span>载入方案 ↗</span>
+            <span>Load design ↗</span>
           </button>
-          <IconBtn label="删除保存的方案" onClick={() => del(d.id)}>
+          <IconBtn label="Delete saved design" onClick={() => del(d.id)}>
             <Trash2 size={17} />
           </IconBtn>
         </div>
@@ -133,12 +143,26 @@ function Footer({ faq }: { faq: () => void }) {
                 required
                 placeholder="Your email address"
                 aria-label="Newsletter email"
+                onInvalid={(e) => {
+                  const email = e.currentTarget
+                  email.setCustomValidity(
+                    email.validity.valueMissing
+                      ? 'Enter your email address.'
+                      : 'Enter a valid email address.',
+                  )
+                }}
+                onInput={(e) => {
+                  e.currentTarget.setCustomValidity('')
+                  setSent(false)
+                }}
               />
-              <IconBtn label="演示订阅" type="submit">
+              <IconBtn label="Try the demo signup" type="submit">
                 <ArrowRight />
               </IconBtn>
             </form>
-            <small role="status">{sent ? '订阅演示已完成 · ' : ''}Demo only, no email sent.</small>
+            <small role="status">
+              {sent ? 'Demo signup complete. No email was sent.' : 'Demo only. No email will be sent.'}
+            </small>
           </div>
         </div>
         <div className="footer-end">
@@ -162,28 +186,25 @@ export function Layout() {
       else window.scrollTo({ top: 0, behavior: 'instant' })
       prevPath.current = path
     }
+    const route = path.replace(/\/+$/, '') || '/'
     const title =
-      path === '/'
-        ? 'The Queen’s Craft'
-        : path.startsWith('/product')
-          ? 'IDC COURT 01'
-          : path === '/customize'
-            ? 'Sneaker Studio'
-            : path.split('/').filter(Boolean).at(-1)?.replaceAll('-', ' ')
+      pageTitles[route.toLowerCase()] ??
+      articles.find((article) => route === '/journal/' + article.id)?.title ??
+      'Page Not Found'
     document.title = 'idc. — ' + title
   }, [location])
   const close = () => setOverlay(null)
   return (
     <>
       <a className="skip-link" href="#main">
-        跳到正文
+        Skip to content
       </a>
       <header className="site-header">
         <div className="header-inner">
-          <Link className="brand-link" to="/" aria-label="idc. 首页">
+          <Link className="brand-link" to="/" aria-label="idc. home">
             <Brand />
           </Link>
-          <nav className="desktop-nav" aria-label="主导航">
+          <nav className="desktop-nav" aria-label="Main navigation">
             {nav.map(([url, t]) => (
               <NavLink key={url} to={url}>
                 {t}
@@ -191,19 +212,19 @@ export function Layout() {
             ))}
           </nav>
           <div className="nav-tools">
-            <IconBtn label="搜索 Search" onClick={() => setOverlay('search')}>
+            <IconBtn label="Search" onClick={() => setOverlay('search')}>
               <Search />
             </IconBtn>
-            <IconBtn label="我的方案 My Designs" onClick={() => setOverlay('saved')}>
+            <IconBtn label="My Designs" onClick={() => setOverlay('saved')}>
               <Bookmark />
             </IconBtn>
-            <Link to="/bag" aria-label={'购物袋 Bag (' + bagCount + ')'} className="bag-link">
+            <Link to="/bag" aria-label={'Bag (' + bagCount + ')'} className="bag-link">
               <ShoppingBag size={19} />
               <span>{bagCount}</span>
             </Link>
             <button
               className="menu-toggle icon-btn"
-              aria-label="打开菜单 Menu"
+              aria-label="Open menu"
               onClick={() => setOverlay('menu')}
             >
               <Menu />
@@ -240,15 +261,18 @@ export function Layout() {
           )}
           {overlay === 'faq' && (
             <div className="faq">
-              <h3>怎样保存作品？</h3>
+              <h3>How do I save my design?</h3>
               <p>
-                在工作室点击保存方案。下次用同一浏览器打开右上角的书签，即可载入。跨设备可以导出并导入
-                JSON。
+                Choose Save design in the studio. Open My Designs in the same browser to load it again.
+                To move a design to another device, export its JSON file and import it there.
               </p>
-              <h3>能下单购买吗？</h3>
-              <p>这是学生商赛概念展示。购物袋用于收集和比较作品，所有编辑保存在本机。</p>
+              <h3>Can I buy a pair?</h3>
+              <p>
+                The sneakers are part of a student concept project and are not for sale. Use the demo bag
+                to collect and compare designs. Your work stays in this browser.
+              </p>
               <button className="action" onClick={close}>
-                知道了 <X size={15} />
+                Got it <X size={15} />
               </button>
             </div>
           )}

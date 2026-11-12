@@ -17,6 +17,18 @@ export async function config(page: Page) {
 export async function noOverflow(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true)
 }
+export async function expectEnglishPage(page: Page) {
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  const copy = await page.evaluate(() => {
+    const attributes = ['aria-label', 'alt', 'placeholder', 'title']
+    const labels = [...document.querySelectorAll('[aria-label], [alt], [placeholder], [title]')].flatMap(
+      (el) => attributes.map((attribute) => el.getAttribute(attribute)),
+    )
+    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content
+    return [document.title, description, document.body.innerText, ...labels].join('\n')
+  })
+  expect(copy).not.toMatch(/\p{Script=Han}/u)
+}
 export async function frame(page: Page) {
   return page.locator('.viewer canvas').evaluate((el) => {
     const canvas = document.createElement('canvas')

@@ -37,11 +37,11 @@ export function Options<T extends string>({
   )
 }
 const commonColors = [
-  ['#F8F8F6', '白'],
-  ['#151515', '黑'],
-  ['#1533E8', '电蓝'],
-  ['#93979D', '银灰'],
-  ['#D9CEB8', '沙色'],
+  ['#F8F8F6', 'White'],
+  ['#151515', 'Black'],
+  ['#1533E8', 'Electric blue'],
+  ['#93979D', 'Silver gray'],
+  ['#D9CEB8', 'Sand'],
 ]
 export function ColorField({
   label,
@@ -69,7 +69,7 @@ export function ColorField({
             aria-pressed={color.toLowerCase() === v.toLowerCase()}
             onClick={() => change(v)}
           >
-            <i style={{ background: v, color: n === '黑' || n === '电蓝' ? 'white' : '#222' }}>
+            <i style={{ background: v, color: v === '#151515' || v === '#1533E8' ? 'white' : '#222' }}>
               {color.toLowerCase() === v.toLowerCase() && <Check size={14} />}
             </i>
             <small>{n}</small>
@@ -80,7 +80,7 @@ export function ColorField({
         <label className="color-picker" style={{ background: color }}>
           <input
             type="color"
-            aria-label={label + ' 拾色器'}
+            aria-label={label + ' picker'}
             value={color}
             onChange={(e) => change(e.target.value.toUpperCase())}
           />
@@ -106,7 +106,7 @@ export function ColorField({
         />
         <small>HEX</small>
       </div>
-      {error && <p role="status">请输入六位十六进制色码，例如 #1533E8。</p>}
+      {error && <p role="status">Enter a six-digit hex color, such as #1533E8.</p>}
     </Field>
   )
 }

@@ -11,28 +11,41 @@ export function Story() {
           <br />
           <em>Style is yours.</em>
         </h1>
-        <p className="intro-cn">我们以低帮板鞋为画布，把球场上的行动力带入日常穿搭。</p>
-        <img className="article-hero" src="/images/hero.webp" alt="球场上的匿名网球运动员" />
+        <p className="story-intro">
+          Court 01 takes the energy of the tennis court into everyday streetwear, starting with a low-top
+          you can make your own.
+        </p>
+        <img
+          className="article-hero"
+          src="/images/hero.webp"
+          alt="A tennis player following through on a shot"
+        />
       </section>
       <div className="wrap story-detail">
         <Eyebrow>THE QUEEN’S CRAFT</Eyebrow>
         <div>
           <h2>{hook}</h2>
           <p>
-            idc. 是高中商赛中的概念品牌，面向 16–35 岁热爱运动与街头穿搭的人。我们从三个设计问题开始。
+            We created idc. for a high school business competition. Our audience is people aged 16–35 who
+            love sport and streetwear. Three questions shaped our first shoe.
           </p>
-          <h3>运动离开球场后，还留下什么？</h3>
+          <h3>What stays with you after you leave the court?</h3>
           <p>
-            判断方向、寻找节奏、一次次重新开始。这些经验也发生在每天的穿衣选择里。idc.
-            希望让穿着者参与设计，用自己选择的颜色和细节表达态度。
+            Choosing a direction, finding a rhythm, starting again. Those choices carry over into how we
+            dress. At idc., the wearer takes part in the design by choosing the colors and details that
+            feel right to them.
           </p>
-          <h3>为什么是低帮板鞋？</h3>
+          <h3>Why a low-top sneaker?</h3>
           <p>
-            平整的侧片足以容纳一行字，低帮轮廓又能和日常衣物自然衔接。我们从侧面草图开始搭建鞋体，再把鞋舌、鞋带和鞋底分别做成可以操作的部件。
+            A flat side panel leaves room for a line of text, and a low collar works with everyday
+            clothes. We built the shoe from a profile sketch, then made the tongue, laces and sole into
+            parts you can edit individually.
           </p>
-          <h3>为什么提出郑钦文联名概念？</h3>
+          <h3>Why propose a collaboration with Zheng Qinwen?</h3>
           <p>
-            我们以网球竞技中持续突破的精神为灵感，把郑钦文列为拟议合作对象。页面上的联名字标、鞋舌字样、收藏挂件和配色均为学生提案中的原创概念视觉。
+            We chose Zheng Qinwen as a proposed collaborator because her drive to keep improving on the
+            tennis court inspired the project. Our student team designed the concept wordmark, tongue
+            lettering, collectible charms and colorways for this proposal.
           </p>
           <blockquote>{slogan}</blockquote>
           <Action to="/customize">DESIGN YOUR PAIR</Action>
@@ -49,25 +62,27 @@ export function Notice() {
       <h1 className="display page-title">
         About this <em>concept.</em>
       </h1>
-      <h2>品牌与联名</h2>
+      <h2>Brand and collaboration</h2>
       <p>
-        {notice} IDC COURT
-        01、三款配色、挂件与香卡均为创意展示。人物场景使用原创概念图像。鞋舌的字体选项是为本项目绘制的概念字样。
+        {notice} Court 01, its three colorways, the charms and the scent card are original concept
+        designs. The athlete scenes use original concept imagery. The script options on the tongue are
+        lettering designed for this project.
       </p>
-      <h2>作品与数据</h2>
+      <h2>Your designs and data</h2>
       <p>
-        工作室在你的浏览器中处理配置和图案。保存的方案、缩略图和演示购物袋使用本地存储；清除站点数据会移除这些记录。可下载
-        JSON 文件备份，也可导出预览 PNG。
+        The studio processes designs and uploaded artwork in your browser. Saved designs, thumbnails and
+        your demo bag use local storage. Clearing this site’s data removes them. Export a JSON file to
+        back up an editable design, or download a PNG of the preview.
       </p>
-      <h2>演示购物袋</h2>
+      <h2>The demo bag</h2>
       <p>
-        尺码是搭配演示选项。价格、库存和生产规格有待确定。本站仅展示概念购物流程，所有设计均可在购买环节之前自由体验。
+        Sizes are for trying out a design. Pricing, stock and production specifications have yet to be
+        set. You can design a pair and add it to your demo bag without placing an order.
       </p>
-      <h2 id="contact">联系与用途</h2>
-      <p>本项目用于学生商赛评审。素材使用或合作咨询请通过向你展示本项目的参赛团队联系。</p>
-      <p lang="en">
-        Student business competition concept. Proposed collaboration only. Not an official product or
-        endorsement.
+      <h2 id="contact">Contact and use</h2>
+      <p>
+        We made this project for a student business competition. For questions about using the artwork or
+        discussing a collaboration, please contact the team presenting the project.
       </p>
     </section>
   )

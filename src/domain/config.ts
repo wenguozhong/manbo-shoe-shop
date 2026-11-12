@@ -18,20 +18,20 @@ export type PartId = (typeof partIds)[number]
 export type MaterialId = (typeof materialIds)[number]
 export type Colorway = (typeof colorways)[number]
 export const partLabels: Record<PartId, string> = {
-  upper: '鞋面',
-  toe: '鞋头',
-  heel: '后跟',
-  tongue: '鞋舌',
-  laces: '鞋带',
-  midsole: '中底',
-  outsole: '外底',
-  accent: '侧饰片',
+  upper: 'Upper',
+  toe: 'Toe',
+  heel: 'Heel',
+  tongue: 'Tongue',
+  laces: 'Laces',
+  midsole: 'Midsole',
+  outsole: 'Outsole',
+  accent: 'Side panel',
 }
 export const materialLabels: Record<MaterialId, string> = {
-  matte: '哑光织物',
-  leather: '平滑皮革',
-  suede: '麂皮',
-  synthetic: '合成材质',
+  matte: 'Matte fabric',
+  leather: 'Smooth leather',
+  suede: 'Suede',
+  synthetic: 'Synthetic',
 }
 export const maxJsonBytes = 1024 * 1024
 export const maxArtworkBytes = 5 * 1024 * 1024
@@ -136,14 +136,15 @@ export function configSummary(c: ShoeConfig) {
     .join(' / ')
 }
 export function parseConfig(text: string) {
-  if (new Blob([text]).size > maxJsonBytes) throw new Error('JSON 文件超过 1 MB。')
+  if (new Blob([text]).size > maxJsonBytes) throw new Error('The JSON file exceeds the 1 MB limit.')
   let value: unknown
   try {
     value = JSON.parse(text)
   } catch {
-    throw new Error('文件不是有效的 JSON。')
+    throw new Error('This file does not contain valid JSON.')
   }
   const parsed = configSchema.safeParse(value)
-  if (!parsed.success) throw new Error('配置不兼容。请使用 IDC COURT 01 v1 的完整配置。')
+  if (!parsed.success)
+    throw new Error('Incompatible design file. Import a complete IDC COURT 01 v1 configuration.')
   return parsed.data
 }

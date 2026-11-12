@@ -52,5 +52,5 @@ it('reports storage failure and preserves the in-memory design', async () => {
   useShop.getState().configure(c)
   expect(useShop.getState().config.colorway).toBe('shadow')
   expect(useShop.getState().putBag(c, null)).toBe(false)
-  expect(useShop.getState().toast?.text).toContain('存储')
+  expect(useShop.getState().toast?.text).toContain('storage')
 })

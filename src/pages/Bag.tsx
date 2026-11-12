@@ -17,10 +17,10 @@ export default function Bag() {
       </h1>
       {!bag.length ? (
         <div className="empty-bag">
-          <img src={productImage('origin')} alt="骨白色 COURT 01 基础鞋款" />
+          <img src={productImage('origin')} alt="Bone-white Court 01 in the Origin colorway" />
           <div>
-            <h2>第一双，从这里开始。</h2>
-            <p>在工作室完成设计，再把它放入你的演示购物袋。</p>
+            <h2>Your bag is empty.</h2>
+            <p>Design your first pair in the studio, then add it to your demo bag.</p>
             <Action to="/customize">BUILD YOUR FIRST PAIR</Action>
           </div>
         </div>
@@ -33,23 +33,23 @@ export default function Bag() {
                 <article className="bag-item" key={item.id}>
                   <img
                     src={item.preview || productImage(c.colorway)}
-                    alt={c.sideText || c.colorway + ' 球鞋预览'}
+                    alt={c.sideText || c.colorway + ' sneaker preview'}
                   />
                   <div className="bag-details">
                     <p className="overline">COURT 01 / {c.colorway.toUpperCase()}</p>
                     <h2>{c.sideText || 'IDC COURT 01'}</h2>
                     <p>
-                      EU {c.size} · {c.laceType.toUpperCase()} 鞋带 ·{' '}
-                      {c.advanced ? c.craft.toUpperCase() : '标准 DIY'}
+                      EU {c.size} · {c.laceType.toUpperCase()} laces ·{' '}
+                      {c.advanced ? c.craft.toUpperCase() : 'Standard customization'}
                     </p>
                     <p>
-                      图案 {c.graphic.toUpperCase()} · {c.placement.toUpperCase()}
+                      Graphic: {c.graphic.toUpperCase()} · {c.placement.toUpperCase()}
                     </p>
                     <small>CONFIG / {item.id.slice(0, 8).toUpperCase()}</small>
                     <div className="bag-controls">
                       <div className="quantity">
                         <IconBtn
-                          label="减少数量"
+                          label="Decrease quantity"
                           disabled={item.qty === 1}
                           onClick={() => quantity(item.id, -1)}
                         >
@@ -57,7 +57,7 @@ export default function Bag() {
                         </IconBtn>
                         <span>{item.qty}</span>
                         <IconBtn
-                          label="增加数量"
+                          label="Increase quantity"
                           disabled={item.qty === 99}
                           onClick={() => quantity(item.id, 1)}
                         >
@@ -65,9 +65,9 @@ export default function Bag() {
                         </IconBtn>
                       </div>
                       <Link className="text-link" to={'/customize?edit=' + item.id}>
-                        编辑方案 <ArrowRight size={14} />
+                        Edit design <ArrowRight size={14} />
                       </Link>
-                      <IconBtn label="移除商品" onClick={() => remove(item.id)}>
+                      <IconBtn label="Remove item" onClick={() => remove(item.id)}>
                         <Trash2 size={16} />
                       </IconBtn>
                     </div>
@@ -78,16 +78,19 @@ export default function Bag() {
           </div>
           <aside className="bag-summary">
             <p className="overline">OVERVIEW</p>
-            <h2>购物袋总览</h2>
+            <h2>Bag summary</h2>
             <div>
-              <span>件数</span>
+              <span>Items</span>
               <b>{count}</b>
             </div>
             <div>
-              <span>价格</span>
-              <b>待定</b>
+              <span>Price</span>
+              <b>To be confirmed</b>
             </div>
-            <p>演示项目，未开放交易。方案保存在此浏览器，可随时返回工作室调整。</p>
+            <p>
+              This bag is for the concept demo. Your designs are saved in this browser, and you can
+              return to the studio to edit them at any time.
+            </p>
             <Action to="/collection" secondary>
               CONTINUE EXPLORING
             </Action>

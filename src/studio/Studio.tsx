@@ -33,10 +33,10 @@ import type { ViewerApi, View } from '../three/Viewer'
 
 const Viewer = lazy(() => import('../three/Viewer'))
 const steps = [
-  ['BASE', '基础选择'],
-  ['DETAILS', '鞋带与细节'],
-  ['PERSONALIZE', '自由表达'],
-  ['REVIEW', '方案总览'],
+  ['BASE', 'Shape and color'],
+  ['DETAILS', 'Laces and fit'],
+  ['PERSONALIZE', 'Text and artwork'],
+  ['REVIEW', 'Your design'],
 ]
 export default function Studio() {
   const config = useShop((s) => s.config),
@@ -79,7 +79,7 @@ export default function Studio() {
       setSelected('upper')
       setView('default')
       setAdded(false)
-    } else store.notify('这份方案在当前浏览器中不存在。')
+    } else store.notify('This design is no longer saved in this browser.')
     if (!edit || !next) navigate('/customize', { replace: true })
   }, [query, navigate])
   function update(patch: Partial<ShoeConfig>) {
@@ -112,11 +112,11 @@ export default function Studio() {
   function png() {
     const url = viewer.current?.capture('png')
     if (!url) {
-      notify('3D 画面尚不可导出。请尝试重试 3D，或导出 JSON。')
+      notify('The 3D preview is unavailable. Retry 3D to export a PNG, or export your design as JSON.')
       return
     }
     download(url, fileName('png'))
-    notify('3D 效果图已导出。')
+    notify('PNG preview exported.')
   }
   function add() {
     if (useShop.getState().putBag(config, thumbnail(), editId)) setAdded(true)
@@ -125,7 +125,7 @@ export default function Studio() {
     const summary = configSummary(config)
     try {
       await navigator.clipboard.writeText(summary)
-      notify('配置摘要已复制。')
+      notify('Design summary copied.')
     } catch {
       setShareText(summary)
     }
@@ -137,9 +137,13 @@ export default function Studio() {
       configure(result)
       setAdded(false)
       go(3)
-      notify('已导入配置。')
+      notify('Design imported.')
     } catch (error) {
-      notify(error instanceof Error ? error.message : '导入失败。')
+      notify(
+        error instanceof Error && !(error instanceof DOMException)
+          ? error.message
+          : 'Could not import this design.',
+      )
     }
   }
   return (
@@ -158,13 +162,13 @@ export default function Studio() {
       <div className="studio-frame">
         <aside className="step-rail">
           <p className="overline">DESIGN YOUR PAIR</p>
-          <nav aria-label="定制步骤">
-            {steps.map(([key, cn], i) => (
+          <nav aria-label="Design steps">
+            {steps.map(([key, title], i) => (
               <button key={key} aria-current={step === i ? 'step' : undefined} onClick={() => go(i)}>
                 <span>{i < step ? <Check size={13} /> : '0' + (i + 1)}</span>
                 <div>
                   <b>{key}</b>
-                  <small>{cn}</small>
+                  <small>{title}</small>
                 </div>
                 <ChevronRight size={14} />
               </button>
@@ -183,7 +187,7 @@ export default function Studio() {
           <div className="stage-top">
             <span className="live-dot" /> 3D PREVIEW <span>{config.colorway.toUpperCase()}</span>
           </div>
-          <Suspense fallback={<div className="viewer-loading">正在载入 3D 工作室…</div>}>
+          <Suspense fallback={<div className="viewer-loading">Loading the 3D studio…</div>}>
             <Viewer
               ref={viewer}
               config={comparing ? createConfig(config.colorway) : config}
@@ -212,23 +216,19 @@ export default function Studio() {
             onKeyUp={() => setComparing(false)}
             onBlur={() => setComparing(false)}
           >
-            {comparing ? '原版配色 · 松开返回' : '按住对比原版'}
+            {comparing ? 'Original colorway · release to return' : 'Hold to compare'}
           </button>
           <div className="stage-bottom">
             <div className="stage-hint">
-              <Move3d size={15} /> 拖动旋转 · 双指或滚轮缩放
+              <Move3d size={15} /> Drag to rotate · pinch or scroll to zoom
             </div>
-            <div className="view-buttons" aria-label="相机视角">
+            <div className="view-buttons" aria-label="Camera views">
               {(['side', 'top', 'heel', 'sole'] as const).map((v) => (
                 <button key={v} aria-pressed={v === view} onClick={() => changeView(v)}>
                   {v.toUpperCase()}
                 </button>
               ))}
-              <button
-                aria-label="RESET VIEW 重置视角"
-                title="重置视角"
-                onClick={() => changeView('default')}
-              >
+              <button aria-label="Reset view" title="Reset view" onClick={() => changeView('default')}>
                 <RotateCcw size={15} />
               </button>
             </div>
@@ -255,19 +255,20 @@ export default function Studio() {
               <>
                 <ConfigTable config={config} />
                 <p className="panel-note">
-                  概念鞋盒附一枚随机收藏挂件（5 款常规＋2 款隐藏）与印签香卡。
+                  The concept box includes a printed scent card and one surprise lace charm from five
+                  regular designs and two hidden editions.
                 </p>
                 <div className="review-tools">
                   <button onClick={() => exportJson(config)}>
-                    <FileJson size={16} /> 导出 JSON
+                    <FileJson size={16} /> Export JSON
                   </button>
                   <button onClick={share}>
-                    <Share2 size={16} /> 分享摘要
+                    <Share2 size={16} /> Share summary
                   </button>
                 </div>
                 {added && (
                   <Link className="text-link" to="/bag">
-                    查看购物袋 <ArrowRight size={15} />
+                    View bag <ArrowRight size={15} />
                   </Link>
                 )}
               </>
@@ -275,17 +276,17 @@ export default function Studio() {
           </div>
           <div className="panel-action">
             {step > 0 && (
-              <button className="back-step" aria-label="上一步" onClick={() => go(step - 1)}>
+              <button className="back-step" aria-label="Previous step" onClick={() => go(step - 1)}>
                 <ArrowLeft size={18} />
               </button>
             )}
             {step < 3 ? (
               <button className="action" onClick={() => go(step + 1)}>
-                下一步 · {steps[step + 1][0]} <ArrowRight size={16} />
+                Next / {steps[step + 1][0]} <ArrowRight size={16} />
               </button>
             ) : (
               <button className="action" onClick={add}>
-                {editId ? '更新购物袋方案' : '加入演示购物袋'} <ShoppingBag size={16} />
+                {editId ? 'Update design in bag' : 'Add to demo bag'} <ShoppingBag size={16} />
               </button>
             )}
           </div>
@@ -297,14 +298,14 @@ export default function Studio() {
         </small>
         <div>
           <button onClick={() => setReset(true)}>
-            <RotateCcw /> 重置
+            <RotateCcw /> Reset
           </button>
           <button onClick={() => fileInput.current?.click()}>
-            <FolderOpen /> 导入 JSON
+            <FolderOpen /> Import JSON
           </button>
           <input
             type="file"
-            aria-label="导入配置文件"
+            aria-label="Import design file"
             accept=".json,application/json"
             ref={fileInput}
             hidden
@@ -315,20 +316,23 @@ export default function Studio() {
             }}
           />
           <button onClick={save}>
-            <Bookmark /> 保存方案
+            <Bookmark /> Save design
           </button>
           <button onClick={png}>
-            <Download /> 导出 PNG
+            <Download /> Export PNG
           </button>
         </div>
       </div>
       <p className="studio-notice">{notice}</p>
       {reset && (
-        <Dialog title="重新开始设计？" onClose={() => setReset(false)}>
-          <p>当前工作台会恢复为 ORIGIN 基础配色。已收藏的作品可从 My Designs 载入。</p>
+        <Dialog title="Reset this design?" onClose={() => setReset(false)}>
+          <p>
+            Reset the studio to the original ORIGIN colorway. You can still load saved designs from My
+            Designs.
+          </p>
           <div className="dialog-actions">
             <button className="action action-outline" onClick={() => setReset(false)}>
-              继续编辑
+              Keep editing
             </button>
             <button
               className="action"
@@ -340,18 +344,18 @@ export default function Studio() {
                 setReset(false)
                 setAdded(false)
                 navigate('/customize', { replace: true })
-                notify('工作台已重置。')
+                notify('Studio reset to ORIGIN.')
               }}
             >
-              确认重置
+              Reset design
             </button>
           </div>
         </Dialog>
       )}
       {shareText && (
-        <Dialog title="分享配置摘要" onClose={() => setShareText('')}>
+        <Dialog title="Share design summary" onClose={() => setShareText('')}>
           <textarea
-            aria-label="可复制的配置摘要"
+            aria-label="Design summary to copy"
             readOnly
             value={shareText}
             onFocus={(e) => e.target.select()}

@@ -335,6 +335,7 @@
 }
 .color-chips {
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
 }
 .color-chips button {
@@ -414,17 +415,8 @@
   padding: 12px 0 18px;
   gap: 8px;
 }
-.switch-label b,
-.switch-label small {
-  display: block;
-}
 .switch-label b {
   font-size: 14px;
-}
-.switch-label small {
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  color: var(--muted);
 }
 .switch-label input {
   position: absolute;
