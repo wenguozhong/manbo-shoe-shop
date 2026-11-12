@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { defaultStyle, readStyle, styleCatalog, styleIds, styleName, type StyleId } from './styles'
 
 export const partIds = [
   'upper',
@@ -11,12 +12,11 @@ export const partIds = [
   'accent',
 ] as const
 export const materialIds = ['matte', 'leather', 'suede', 'synthetic'] as const
-export const colorways = ['origin', 'volt', 'shadow'] as const
 export const sizes = ['36', '37', '38', '39', '40', '41', '42', '43', '44'] as const
 export const hex = z.string().regex(/^#[0-9a-f]{6}$/i)
 export type PartId = (typeof partIds)[number]
 export type MaterialId = (typeof materialIds)[number]
-export type Colorway = (typeof colorways)[number]
+export type Colorway = StyleId
 export const partLabels: Record<PartId, string> = {
   upper: 'Upper',
   toe: 'Toe',
@@ -40,7 +40,7 @@ export const configSchema = z.object({
   schemaVersion: z.literal(1),
   model: z.literal('court-01'),
   silhouette: z.enum(['classic-low', 'bold-low']),
-  colorway: z.enum(colorways),
+  colorway: z.preprocess((value) => readStyle(value) ?? value, z.enum(styleIds)),
   parts: z.record(z.enum(partIds), partSchema),
   laceType: z.enum(['flat', 'rope', 'contrast']),
   sideText: z.string().regex(/^[\p{L}\p{N} ]{0,14}$/u),
@@ -70,11 +70,6 @@ export const configSchema = z.object({
   updatedAt: z.iso.datetime(),
 })
 export type ShoeConfig = z.infer<typeof configSchema>
-export const palette: Record<Colorway, string[]> = {
-  origin: ['#EBE8DF', '#E2DFD3', '#252828', '#EDEAE1', '#F8F6EE', '#E9E6DC', '#938D7D', '#C7C3B6'],
-  volt: ['#1533E8', '#1C37BE', '#132877', '#E6E9F3', '#182778', '#EFEFE8', '#222F58', '#A9BAF4'],
-  shadow: ['#2C3034', '#222529', '#161A1D', '#36393D', '#202124', '#C8C9C6', '#555A5E', '#41519E'],
-}
 const defaultMaterials: MaterialId[] = [
   'leather',
   'suede',
@@ -87,10 +82,13 @@ const defaultMaterials: MaterialId[] = [
 ]
 export function variantParts(variant: Colorway): ShoeConfig['parts'] {
   return Object.fromEntries(
-    partIds.map((id, i) => [id, { color: palette[variant][i], material: defaultMaterials[i] }]),
+    partIds.map((id, i) => [
+      id,
+      { color: styleCatalog[variant].colors[i], material: defaultMaterials[i] },
+    ]),
   ) as ShoeConfig['parts']
 }
-export function createConfig(colorway: Colorway = 'origin'): ShoeConfig {
+export function createConfig(colorway: Colorway = defaultStyle): ShoeConfig {
   return {
     schemaVersion: 1,
     model: 'court-01',
@@ -100,9 +98,9 @@ export function createConfig(colorway: Colorway = 'origin'): ShoeConfig {
     laceType: 'flat',
     sideText: '',
     textFont: 'grotesk',
-    textColor: colorway === 'shadow' ? '#F4F3EE' : '#141720',
+    textColor: '#26312D',
     graphic: 'none',
-    graphicColor: '#1533E8',
+    graphicColor: styleCatalog[colorway].colors[7],
     placement: 'outer',
     tongueScript: 'none',
     advanced: false,
@@ -114,7 +112,7 @@ export function createConfig(colorway: Colorway = 'origin'): ShoeConfig {
   }
 }
 export function readColor(value: string | null): Colorway | undefined {
-  return colorways.find((c) => c === value)
+  return readStyle(value)
 }
 export function cleanSideText(value: string) {
   return Array.from(value.replace(/[^\p{L}\p{N} ]/gu, ''))
@@ -125,7 +123,7 @@ export function configSummary(c: ShoeConfig) {
   return [
     'IDC COURT 01',
     c.silhouette.toUpperCase().replace('-', ' '),
-    c.colorway.toUpperCase(),
+    styleName(c.colorway),
     'EU ' + c.size,
     c.laceType.toUpperCase(),
     c.sideText,

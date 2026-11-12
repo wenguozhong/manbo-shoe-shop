@@ -26,6 +26,7 @@ import {
 } from '../domain/config'
 import { useShop } from '../domain/store'
 import { Dialog, Eyebrow } from '../ui/Common'
+import { styleName } from '../domain/styles'
 import { notice } from '../data/content'
 import { download, exportJson, fileName, importJson } from '../lib/files'
 import { BasePanel, DetailsPanel, PersonalPanel, ConfigTable } from './Panels'
@@ -185,7 +186,7 @@ export default function Studio() {
         </aside>
         <div className="stage">
           <div className="stage-top">
-            <span className="live-dot" /> 3D PREVIEW <span>{config.colorway.toUpperCase()}</span>
+            <span className="live-dot" /> 3D PREVIEW <span>{styleName(config.colorway)}</span>
           </div>
           <Suspense fallback={<div className="viewer-loading">Loading the 3D studio…</div>}>
             <Viewer
@@ -327,7 +328,7 @@ export default function Studio() {
       {reset && (
         <Dialog title="Reset this design?" onClose={() => setReset(false)}>
           <p>
-            Reset the studio to the original ORIGIN colorway. You can still load saved designs from My
+            Reset the studio to the Rallyco Classic edition. You can still load saved designs from My
             Designs.
           </p>
           <div className="dialog-actions">
@@ -344,7 +345,7 @@ export default function Studio() {
                 setReset(false)
                 setAdded(false)
                 navigate('/customize', { replace: true })
-                notify('Studio reset to ORIGIN.')
+                notify('Studio reset to Rallyco Classic.')
               }}
             >
               Reset design

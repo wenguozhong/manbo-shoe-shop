@@ -9,19 +9,35 @@ import {
   variantParts,
 } from '../../src/domain/config'
 
+import { styleIds } from '../../src/domain/styles'
+
 describe('design format and input constraints', () => {
-  it.each(['origin', 'volt', 'shadow'] as const)(
-    'round trips %s with eight independent parts',
-    (variant) => {
-      const config = createConfig(variant)
-      expect(parseConfig(JSON.stringify(config))).toEqual(config)
-      expect(Object.keys(config.parts).sort()).toEqual([...partIds].sort())
-      const another = variantParts(variant)
-      config.parts.toe.color = '#123456'
-      expect(another.toe.color).not.toBe(config.parts.toe.color)
-    },
-  )
+  it.each(styleIds)('round trips %s with eight independent parts', (variant) => {
+    const config = createConfig(variant)
+    expect(parseConfig(JSON.stringify(config))).toEqual(config)
+    expect(Object.keys(config.parts).sort()).toEqual([...partIds].sort())
+    const another = variantParts(variant)
+    config.parts.toe.color = '#123456'
+    expect(another.toe.color).not.toBe(config.parts.toe.color)
+  })
+  it('opens earlier links and designs without changing their custom parts or lettering', () => {
+    const design = createConfig('topspin-rally')
+    design.parts.toe.color = '#123456'
+    design.sideText = 'MY PAIR'
+    for (const [oldId, id] of [
+      ['origin', 'rallyco-classic'],
+      ['volt', 'topspin-rally'],
+      ['shadow', 'volley-courtline'],
+    ]) {
+      expect(readColor(oldId)).toBe(id)
+      expect(parseConfig(JSON.stringify({ ...design, colorway: oldId }))).toEqual({
+        ...design,
+        colorway: id,
+      })
+    }
+  })
   it.each([
+    { colorway: 'unknown-edition' },
     { schemaVersion: 2 },
     { model: 'another' },
     { sideText: '<svg/onload=x>' },

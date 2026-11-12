@@ -17,7 +17,7 @@ test('replaces a broken GLB with a functional procedural shoe', async ({ page })
     ),
   ).toBeVisible()
   const before = await frame(page)
-  await page.getByRole('button', { name: 'SHADOW', exact: true }).click()
+  await page.getByRole('button', { name: 'Volley', exact: true }).click()
   await expect.poll(async () => (await frame(page)) !== before).toBe(true)
 })
 test('loads an external GLB mesh by name, retains mapped editing and disables missing parts', async ({
@@ -80,7 +80,7 @@ test('keeps editing and file export available on a device without WebGL', async 
   })
   await page.goto('/customize')
   await expect(page.getByText('2D colorway preview')).toBeVisible()
-  await page.getByRole('button', { name: 'VOLT', exact: true }).click()
+  await page.getByRole('button', { name: 'Topspin', exact: true }).click()
   await page
     .getByRole('navigation', { name: 'Design steps' })
     .getByRole('button', { name: /REVIEW/ })

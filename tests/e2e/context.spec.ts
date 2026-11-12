@@ -13,5 +13,5 @@ test('recovers a lost WebGL context with the design intact', async ({ page }) =>
   await expect(page.getByText('2D colorway preview')).toBeVisible()
   await page.getByRole('button', { name: 'Retry 3D' }).click()
   await ready(page)
-  expect((await config(page)).colorway).toBe('shadow')
+  expect((await config(page)).colorway).toBe('volley-courtline')
 })

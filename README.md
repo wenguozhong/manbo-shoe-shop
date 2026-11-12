@@ -20,8 +20,8 @@ npm run preview
 
 ## 演示路线
 
-1. 从首页浏览品牌故事及三款配色，进入 Collection 或直接用颜色圆点预览鞋款，再进入 Studio。
-2. 在 BASE 切换两种鞋楦和三种配色。点鞋上的真实部件或面板名称，设定颜色与四种基础材质。滑鼠或单指拖动可旋转，滚轮或双指可缩放。视角按钮可观察后跟、顶面及鞋底。
+1. 从首页浏览品牌故事及三个系列的九款网球鞋，进入 Collection 或直接用颜色圆点预览鞋款，再进入 Studio。
+2. 在 BASE 切换两种鞋楦和九款设计。点鞋上的真实部件或面板名称，设定颜色与四种基础材质。滑鼠或单指拖动可旋转，滚轮或双指可缩放。视角按钮可观察后跟、顶面及鞋底。
 3. 在 DETAILS 选择鞋带式样、颜色、演示尺码和鞋舌内侧的原创字体字样。在 PERSONALIZE 输入最多 14 个文字、数字或空格，自选字体、颜色、内外侧和纹样。
 4. 打开高级定制可模拟印花、刺绣，上传本地图案并移动或缩放。图像经过本地缩小、重新编码后放入方案，所以保存、刷新和 JSON 往返都能保留图案。
 5. 在 REVIEW 查看八个部件的配置、概念赠品与当前搭配。导出 PNG 获取真实相机画面，导出 JSON 保存可编辑副本，导入 JSON 恢复。My Designs 可载入或删除方案。
@@ -30,8 +30,8 @@ npm run preview
 | 页面 | 路径 |
 | --- | --- |
 | 首页、系列 | `/`、`/collection` |
-| 产品 | `/product/court-01?color=volt` |
-| 工作室 | `/customize`，亦支持 `?color=origin\|volt\|shadow` |
+| 产品 | `/product/court-01?color=topspin-rally` |
+| 工作室 | `/customize`，可使用款式 ID，如 `?color=volley-courtline` |
 | 品牌故事、杂志及三篇文章 | `/story`、`/journal`、`/journal/:id` |
 | 购物袋、概念与隐私声明 | `/bag`、`/concept-notice` |
 
@@ -43,7 +43,7 @@ React 19.3 与 React Three Fiber 9.8 配对，Three.js 0.180、Drei 10.7、TypeS
 - `src/three/ShoeModel.tsx`、`shoeGeometry.ts`、`appearance.ts` 生成可拾取网格与纹理。`Viewer.tsx` 提供相机、截图与设备降级。
 - `src/studio/` 实现四步操作，`src/pages/` 是品牌、系列、产品、购物袋及内容页面。
 - `public/` 包含同源图像、模型清单、原创图形、字体以外的静态资源与许可。`artifacts/screenshots/` 保存最终验收图。
-- 可用 `node scripts/render-catalog.mjs` 离线重建三张产品图。此脚本需要可用的 Chromium，可通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` 指向本地安装。
+- 可用 `node scripts/render-catalog.mjs` 离线重建九张产品图。此脚本需要可用的 Chromium，可通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` 指向本地安装。
 
 ### 接入自有授权的 GLB
 

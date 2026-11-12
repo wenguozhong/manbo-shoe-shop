@@ -18,7 +18,7 @@
 | 视觉验收 | 查看了桌面首页、全页、桌面与手机工作室、手机首页及带 MANBO 字样的刺绣特写。截图由生产预览生成。 |
 | 已知范围 | 本轮使用 Windows Chrome 和模拟触屏，未使用真实 iPhone 或 Safari。印花、刺绣与材质属于概念表现。构建日志含第三方 Zod 注释在打包时被移除的提示。 |
 
-[首页桌面](../artifacts/screenshots/home-desktop.png) · [完整首页](../artifacts/screenshots/home-desktop-full.png) · [手机首页](../artifacts/screenshots/home-mobile.png) · [桌面工作室](../artifacts/screenshots/studio-desktop.png) · [手机工作室](../artifacts/screenshots/studio-mobile.png) · [ORIGIN](../artifacts/screenshots/colorway-origin.png) · [VOLT](../artifacts/screenshots/colorway-volt.png) · [鞋侧文字与图案](../artifacts/screenshots/side-lettering-detail.png)
+[首页桌面](../artifacts/screenshots/home-desktop.png) · [完整首页](../artifacts/screenshots/home-desktop-full.png) · [手机首页](../artifacts/screenshots/home-mobile.png) · [桌面工作室](../artifacts/screenshots/studio-desktop.png) · [手机工作室](../artifacts/screenshots/studio-mobile.png) · [Rallyco Classic](../artifacts/screenshots/rallyco-classic.png) · [Topspin Rally](../artifacts/screenshots/topspin-rally.png) · [鞋侧文字与图案](../artifacts/screenshots/side-lettering-detail.png)
 
 ## 发布记录
 

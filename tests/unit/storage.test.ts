@@ -22,7 +22,7 @@ it('recovers from old, corrupt or incomplete records without breaking the editor
 it('snapshots bags and saved work independently, updates in place and respects boundaries', async () => {
   const { useShop } = await import('../../src/domain/store'),
     store = useShop.getState(),
-    c = createConfig('volt')
+    c = createConfig('topspin-rally')
   store.putBag(c, null)
   store.saveDesign(c, null)
   const id = useShop.getState().bag[0].id
@@ -42,7 +42,7 @@ it('snapshots bags and saved work independently, updates in place and respects b
 })
 it('reports storage failure and preserves the in-memory design', async () => {
   const { useShop } = await import('../../src/domain/store'),
-    c = createConfig('shadow')
+    c = createConfig('volley-courtline')
   vi.stubGlobal('localStorage', {
     getItem: () => null,
     setItem: () => {
@@ -50,7 +50,7 @@ it('reports storage failure and preserves the in-memory design', async () => {
     },
   })
   useShop.getState().configure(c)
-  expect(useShop.getState().config.colorway).toBe('shadow')
+  expect(useShop.getState().config.colorway).toBe('volley-courtline')
   expect(useShop.getState().putBag(c, null)).toBe(false)
   expect(useShop.getState().toast?.text).toContain('storage')
 })

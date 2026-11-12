@@ -9,6 +9,7 @@ describe('procedural asset', () => {
       expect(new Set(pieces.map((p) => p.part))).toEqual(new Set(partIds))
       for (const required of [
         'tread',
+        'referenceMark',
         'outerMark',
         'innerMark',
         'soleMark',

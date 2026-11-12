@@ -12,13 +12,15 @@ export function Story() {
           <em>Style is yours.</em>
         </h1>
         <p className="story-intro">
-          Court 01 takes the energy of the tennis court into everyday streetwear, starting with a low-top
-          you can make your own.
+          Court 01 takes the energy of the tennis court into everyday streetwear. The Rallyco, Topspin
+          and Volley design boards each explore three ways to wear a low-top.
         </p>
         <img
-          className="article-hero"
-          src="/images/hero.webp"
-          alt="A tennis player following through on a shot"
+          className="campaign-story-poster"
+          src="/images/campaign-brand-board.jpg"
+          width="1642"
+          height="1032"
+          alt="The idc. brand board with its blue wordmark, the Queen’s Design tennis poster and the words “Play your way.”"
         />
       </section>
       <div className="wrap story-detail">
@@ -38,8 +40,9 @@ export function Story() {
           <h3>Why a low-top sneaker?</h3>
           <p>
             A flat side panel leaves room for a line of text, and a low collar works with everyday
-            clothes. We built the shoe from a profile sketch, then made the tongue, laces and sole into
-            parts you can edit individually.
+            clothes. The three design boards show how a court line, a tennis ball or a pair of crossed
+            rackets can change the character of the shoe. You can edit the tongue, laces and sole
+            separately in the studio.
           </p>
           <h3>Why propose a collaboration with Zheng Qinwen?</h3>
           <p>
@@ -64,9 +67,9 @@ export function Notice() {
       </h1>
       <h2>Brand and collaboration</h2>
       <p>
-        {notice} Court 01, its three colorways, the charms and the scent card are original concept
-        designs. The athlete scenes use original concept imagery. The script options on the tongue are
-        lettering designed for this project.
+        {notice} The two campaign posters and three sneaker design boards are part of the student
+        presentation. The Court 01 studio interprets the nine styles shown on the Rallyco, Topspin
+        and Volley boards. The charms, scent card and tongue lettering are also part of the proposal.
       </p>
       <h2>Your designs and data</h2>
       <p>

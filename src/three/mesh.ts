@@ -2,6 +2,7 @@ import { BufferGeometry, Float32BufferAttribute, Vector3 } from 'three'
 
 export type Surface = (u: number, v: number) => Vector3
 type Path = (progress: number) => Vector3
+type Radius = number | ((progress: number) => number)
 
 /** Append many small pieces of one material to a single draw call. */
 export class MeshBuilder {
@@ -30,7 +31,7 @@ export class MeshBuilder {
     }
   }
 
-  tube(path: Path, segments: number, radius: number, thickness = radius, sides = 7) {
+  tube(path: Path, segments: number, radius: Radius, thickness: Radius = radius, sides = 7) {
     const samples = Array.from({ length: segments + 1 }, (_, i) => path(i / segments))
     const frames = samples.map((point, i) => {
       const direction = samples[Math.min(i + 1, segments)]
@@ -45,10 +46,12 @@ export class MeshBuilder {
     this.grid(segments, sides, (t, v) => {
       const { point, cross, up } = frames[Math.round(t * segments)]
       const angle = v * Math.PI * 2
+      const width = typeof radius === 'number' ? radius : radius(t)
+      const depth = typeof thickness === 'number' ? thickness : thickness(t)
       return point
         .clone()
-        .addScaledVector(cross, radius * Math.cos(angle))
-        .addScaledVector(up, thickness * Math.sin(angle))
+        .addScaledVector(cross, width * Math.cos(angle))
+        .addScaledVector(up, depth * Math.sin(angle))
     })
   }
 

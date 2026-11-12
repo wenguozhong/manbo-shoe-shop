@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from 'react'
-import { Check, ImagePlus, Trash2 } from 'lucide-react'
+import { ImagePlus, Trash2 } from 'lucide-react'
 import {
   cleanSideText,
   materialIds,
@@ -11,8 +11,8 @@ import {
   type PartId,
   type ShoeConfig,
 } from '../domain/config'
-import { variants } from '../data/content'
-import { ColorField, Field, Options } from './Fields'
+import { styleName } from '../domain/styles'
+import { ColorField, Field, Options, StylePicker } from './Fields'
 import { importArtwork } from '../lib/files'
 
 type Props = { config: ShoeConfig; update: (patch: Partial<ShoeConfig>) => void }
@@ -28,27 +28,16 @@ export function BasePanel({
   }
   return (
     <>
+      <StylePicker
+        value={config.colorway}
+        select={(id) => update({ colorway: id, parts: variantParts(id) })}
+      />
       <Options
         label="Silhouette"
         items={['classic-low', 'bold-low'] as const}
         value={config.silhouette}
         select={(silhouette) => update({ silhouette })}
       />
-      <Field label="Base colorway">
-        <div className="variant-picks">
-          {variants.map((v) => (
-            <button
-              aria-pressed={config.colorway === v.id}
-              key={v.id}
-              onClick={() => update({ colorway: v.id, parts: variantParts(v.id) })}
-            >
-              <i style={{ background: v.chips[0] }} />
-              {v.name}
-              {config.colorway === v.id && <Check size={13} />}
-            </button>
-          ))}
-        </div>
-      </Field>
       <Field
         label="Shoe part"
         hint="Select a part on the shoe or below to change its color and material."
@@ -264,7 +253,7 @@ export function PersonalPanel({ config, update, notify }: { notify: (v: string) 
 export function ConfigTable({ config: c, full = true }: { config: ShoeConfig; full?: boolean }) {
   const rows = [
     ['Silhouette', c.silhouette.replace('-', ' ').toUpperCase()],
-    ['Colorway / size', c.colorway.toUpperCase() + ' / EU ' + c.size],
+    ['Edition / size', styleName(c.colorway) + ' / EU ' + c.size],
     ['Laces', c.laceType.toUpperCase() + ' · ' + c.parts.laces.color],
     ['Side lettering', c.sideText || 'None'],
     ['Graphic / position', c.graphic.toUpperCase() + ' / ' + c.placement.toUpperCase()],

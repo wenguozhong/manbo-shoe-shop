@@ -1,4 +1,5 @@
 import { Vector3 } from 'three'
+import type { StyleId } from '../domain/styles'
 
 export const LENGTH = 1.8
 export type Side = 1 | -1
@@ -10,44 +11,46 @@ const smooth = (a: number, b: number, x: number) => {
 }
 type Stations = readonly (readonly [number, number])[]
 
-// Smooth section measurements taken along the original last, from heel to toe.
+// Measurements run from the heel seat to the toe spring of the court last.
 const widths: Stations = [
-  [-1.8, 0.475],
-  [-1.44, 0.494],
-  [-1.12, 0.519],
-  [-0.7, 0.496],
-  [-0.36, 0.503],
-  [-0.05, 0.541],
-  [0.4, 0.606],
-  [0.78, 0.641],
-  [1.07, 0.638],
-  [1.42, 0.613],
-  [1.8, 0.536],
+  [-1.8, 0.424],
+  [-1.44, 0.461],
+  [-1.12, 0.475],
+  [-0.7, 0.458],
+  [-0.36, 0.459],
+  [-0.05, 0.492],
+  [0.4, 0.561],
+  [0.78, 0.599],
+  [1.07, 0.602],
+  [1.42, 0.56],
+  [1.8, 0.47],
 ]
 const heights: Stations = [
-  [-1.8, 0.695],
-  [-1.59, 0.705],
-  [-1.32, 0.65],
-  [-1.02, 0.543],
-  [-0.78, 0.514],
-  [-0.58, 0.541],
-  [-0.38, 0.696],
-  [-0.21, 0.735],
-  [0.0, 0.698],
-  [0.34, 0.566],
-  [0.66, 0.435],
-  [0.88, 0.35],
-  [1.15, 0.286],
-  [1.42, 0.206],
-  [1.65, 0.146],
-  [1.8, 0.1],
+  [-1.8, 0.717],
+  [-1.62, 0.856],
+  [-1.47, 0.87],
+  [-1.27, 0.72],
+  [-1.02, 0.612],
+  [-0.82, 0.573],
+  [-0.65, 0.608],
+  [-0.53, 0.736],
+  [-0.41, 0.853],
+  [-0.23, 0.856],
+  [0.0, 0.775],
+  [0.32, 0.613],
+  [0.66, 0.428],
+  [0.88, 0.337],
+  [1.13, 0.254],
+  [1.43, 0.194],
+  [1.65, 0.124],
+  [1.8, 0.078],
 ]
 const throat: Stations = [
-  [-1.8, 0.8],
-  [-1.58, 0.77],
-  [-1.28, 0.73],
-  [-0.9, 0.75],
-  [-0.58, 0.73],
+  [-1.8, 0.82],
+  [-1.58, 0.8],
+  [-1.28, 0.78],
+  [-0.9, 0.76],
+  [-0.58, 0.72],
   [-0.34, 0.64],
   [-0.1, 0.53],
   [0.25, 0.45],
@@ -55,17 +58,6 @@ const throat: Stations = [
   [0.81, 0.27],
   [1.01, 0],
   [1.8, 0],
-]
-const tongueHeight: Stations = [
-  [-0.69, 1.285],
-  [-0.54, 1.237],
-  [-0.39, 1.119],
-  [-0.2, 1.096],
-  [0.04, 1.028],
-  [0.32, 0.923],
-  [0.6, 0.782],
-  [0.82, 0.659],
-  [1.02, 0.594],
 ]
 
 function measure(x: number, stations: Stations) {
@@ -97,33 +89,39 @@ const waist = (x: number) => Math.exp(-(((x + 0.4) / 0.65) ** 2))
 /** The sole, panels, eyelets, and underfoot printing share these coordinates. */
 export class ShoeLast {
   readonly bold: boolean
+  readonly style: StyleId
+  readonly family: 'rallyco' | 'topspin' | 'volley'
   readonly thickness: number
   readonly lift: number
-  constructor(bold: boolean) {
+  constructor(bold: boolean, style: StyleId = 'rallyco-classic') {
     this.bold = bold
-    this.thickness = bold ? 0.342 : 0.259
-    this.lift = bold ? 0.083 : 0
+    this.style = style
+    this.family = style.startsWith('volley') ? 'volley' : style.startsWith('topspin') ? 'topspin' : 'rallyco'
+    this.lift = bold ? 0.068 : 0
+    this.thickness = (this.family === 'rallyco' ? 0.33 : this.family === 'topspin' ? 0.306 : 0.298) + this.lift
   }
 
   center(x: number) {
-    return 0.014 * Math.sin(2.3 * x) - 0.081 * smooth(0.65, LENGTH, x)
+    return -0.012 * Math.sin(2.15 * x) + 0.067 * smooth(0.55, LENGTH, x)
   }
 
   width(x: number, side: Side) {
-    const heel = Math.max(0, (-1.32 - x) / 0.48)
-    const toe = Math.max(0, (x - 1.13) / 0.67)
+    const heel = Math.max(0, (-1.29 - x) / 0.51)
+    const toe = Math.max(0, (x - 1.07) / 0.73)
     const cap = Math.sqrt(Math.max(0, 1 - Math.max(heel, toe) ** 2))
-    const medialShape = side === -1 ? 1 - 0.115 * waist(x) : 1
-    const wide = this.bold ? 1.012 + 0.092 * smooth(-0.2, 1.12, x) : 1
-    return cap * measure(x, widths) * medialShape * wide
+    const medialShape = side === 1 ? 1 - 0.108 * waist(x) : 1
+    const ballWidth = smooth(-0.2, 1.12, x)
+    const wide = this.bold ? 1.014 + 0.083 * ballWidth : 1
+    const familyWidth = this.family === 'topspin' ? 0.973 : this.family === 'volley' ? 1 + 0.028 * ballWidth : 1
+    return cap * measure(x, widths) * medialShape * wide * familyWidth
   }
 
   rocker(x: number) {
-    return 0.12 * smooth(0.71, LENGTH, x) ** 1.8 + 0.028 * (1 - smooth(-LENGTH, -1.13, x))
+    return 0.083 * smooth(0.91, LENGTH, x) ** 1.8 + 0.025 * (1 - smooth(-LENGTH, -1.23, x))
   }
 
   topOfSole(x: number) {
-    return this.rocker(x) + this.thickness + 0.024 * (1 - smooth(-1.65, 0.91, x))
+    return this.rocker(x) + this.thickness + 0.044 * (1 - smooth(-1.64, 0.95, x))
   }
 
   /** Edge of a rubber band. u is angular so curvature is retained around both caps. */
@@ -141,17 +139,26 @@ export class ShoeLast {
   surface(x: number, t: number, side: Side) {
     const theta = (t * Math.PI) / 2
     const sweep = Math.sin(theta)
-    const start = this.topOfSole(x) - 0.045
-    const height = measure(x, heights) * (this.bold && x > 0 ? 1 + 0.072 * smooth(0, 1.18, x) : 1)
+    const start = this.topOfSole(x) - 0.032
+    const height = this.upperHeight(x)
     const ratio = clamp(measure(x, throat))
-    const z = this.width(x, side) * 0.95 * (ratio + (1 - ratio) * Math.cos(theta))
-    // A tucked heel and receding crown give the toe a proper curved front wall.
-    const tuck = 0.129 * (1 - smooth(-1.8, -1.18, x)) - 0.214 * smooth(0.93, 1.8, x)
+    const z = this.width(x, side) * 0.96 * (ratio + (1 - ratio) * Math.cos(theta))
+    const tuck = 0.116 * (1 - smooth(-1.8, -1.12, x)) - 0.195 * smooth(0.96, 1.8, x)
     return new Vector3(
       x * 0.977 + tuck * sweep ** 1.22,
-      start + (height + 0.045) * sweep,
+      start + (height + 0.032) * sweep,
       this.center(x) + side * z,
     )
+  }
+
+  upperHeight(x: number) {
+    const familyHeight = this.family === 'volley' ? 0.965 : this.family === 'topspin' ? 1.018 : 1
+    return measure(x, heights) * familyHeight * (this.bold ? 1 + 0.064 * smooth(0, 1.18, x) : 1)
+  }
+
+  /** Convert height above the welt to a surface parameter, for level quarter graphics. */
+  atHeight(x: number, height: number) {
+    return (2 / Math.PI) * Math.asin(clamp((height + 0.032) / (this.upperHeight(x) + 0.032)))
   }
 
   normal(x: number, t: number, side: Side) {
@@ -171,18 +178,33 @@ export class ShoeLast {
 
   tongueWidth(x: number) {
     return (
-      (0.361 - 0.052 * smooth(-0.18, 0.76, x) - 0.042 * (1 - smooth(-0.68, -0.43, x))) *
+      (0.345 - 0.044 * smooth(-0.18, 0.76, x) - 0.028 * (1 - smooth(-0.68, -0.43, x))) *
       (this.bold ? 1.035 : 1)
     )
   }
 
   tongue(x: number, w: number, offset = 0) {
-    const y = measure(x, tongueHeight) + this.lift - 0.08 * w ** 2
-    return new Vector3(x, y + offset, this.center(x) + this.tongueWidth(x) * w)
+    const familyDrop = this.family === 'volley' ? 0.05 : this.family === 'topspin' ? 0.016 : 0
+    const tip = 1.336 + this.lift - familyDrop - 0.172 * Math.max(0, x + 0.69)
+    const instep = this.topOfSole(x) + this.upperHeight(x) + 0.041 - 0.054 * smooth(0.64, 1.01, x)
+    const crown = lerp(tip, instep, smooth(-0.43, -0.18, x))
+    return new Vector3(x, crown - 0.064 * w ** 2 + offset, this.center(x) + this.tongueWidth(x) * w)
   }
 
   eye(x: number, side: Side) {
-    return this.panel(x, 0.783, side, 0.026)
+    return this.panel(x, 0.806, side, 0.031)
+  }
+
+  /** Height of the leather touching the underside of a lace at this point across the throat. */
+  laceBed(x: number, z: number) {
+    const axis = this.center(x)
+    const side: Side = z < axis ? -1 : 1
+    const ratio = measure(x, throat)
+    const radius = Math.abs(z - axis) / (0.96 * this.width(x, side))
+    const section = 2 / Math.PI * Math.acos(clamp((radius - ratio) / (1 - ratio)))
+    const facing = this.surface(x, section, side).y + 0.027
+    const w = (z - axis) / this.tongueWidth(x)
+    return Math.abs(w) > 1 ? facing : Math.max(facing, this.tongue(x, w).y)
   }
 
   insole(x: number, w: number) {

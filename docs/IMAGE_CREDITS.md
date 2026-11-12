@@ -1,8 +1,12 @@
 # 品牌视觉素材记录
 
+## 本版海报与鞋款参考
+
+首页与品牌故事使用 `picture/海报 1.jpg` 和 `picture/海报 2.jpg` 的原始文件。商品页的参考视图取自用户上传的三张鞋款展板，浏览器展示同一款鞋的侧面和侧片细节。
+
 ## 商品渲染图
 
-`public/images/court-01-origin.webp`、`public/images/court-01-volt.webp`、`public/images/court-01-shadow.webp` 对应工作室的 ORIGIN、VOLT、SHADOW 三种基础配置。图像来源是本项目原创的程序化低帮鞋模型 `src/three/ShoeModel.tsx`。渲染时使用 `createConfig` 的默认鞋型与材质、同一摄影机视角与灯光，三款共用取景范围，输出尺寸为 1000 × 760。
+本版的九张 `public/images/court-01-<款式 ID>.webp` 对应 Rallyco、Topspin、Volley 各三款。商品图使用 `src/three/ShoeModel.tsx` 和各款的默认配置渲染，输出尺寸为 1000 × 760。
 
 依赖安装完成后可在项目根目录运行 `node scripts/render-catalog.mjs` 重新生成。脚本用 Vite 临时提供模型入口，通过 Playwright 启动 Chromium 读取工作室的 WebGL 画面。可以用环境变量 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` 指定浏览器，Windows 默认识别常规位置安装的 Chrome，其他环境可以使用 Playwright 安装的 Chromium。
 
@@ -21,7 +25,7 @@
 | `public/graphics/charm-4.svg` | STAR，放射刻面五角星 |
 | `public/graphics/charm-5.svg`、`public/graphics/charm-6.svg` | HIDDEN 01 和 HIDDEN 02，带金属扣环的隐藏轮廓 |
 
-## 摄影风格图像
+## 初版生成的摄影风格图像
 
 这组图像由本项目使用 OpenAI 内置 imagegen 生成。网页交付文件存放于 `public/images/`，由生成的原始 PNG 缩放、编码为 WebP。图中运动员为虚构人物，鞋材与鞋款用于学生商赛概念展示。
 

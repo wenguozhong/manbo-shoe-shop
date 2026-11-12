@@ -4,6 +4,7 @@ import { Color, DoubleSide, type CanvasTexture } from 'three'
 import type { PartId, ShoeConfig } from '../domain/config'
 import { buildLacing, buildShoe, type ShoePiece } from './shoeGeometry'
 import { surfaceResponse, useGrains, useLabels, useSideArtwork } from './appearance'
+import { useReferencePrint } from './referencePrint'
 
 type Props = {
   config: ShoeConfig
@@ -27,9 +28,10 @@ type SurfaceProps = {
   grains: ReturnType<typeof useGrains>
   labels: ReturnType<typeof useLabels>
   sideArtwork: CanvasTexture
+  referencePrint: CanvasTexture
 }
 
-function PieceMaterial({ piece, config, state, grains, labels, sideArtwork }: SurfaceProps) {
+function PieceMaterial({ piece, config, state, grains, labels, sideArtwork, referencePrint }: SurfaceProps) {
   const { part, finish } = piece
   const { color, material } = config.parts[part]
   const response = surfaceResponse[material]
@@ -63,24 +65,24 @@ function PieceMaterial({ piece, config, state, grains, labels, sideArtwork }: Su
       break
     }
     case 'lining':
-      pigment = tint('#27292c', color, 0.095)
+      pigment = tint('#c1b7a6', color, 0.52)
       grain = grains.matte
       bumpScale = 0.008
       roughness = 0.95
       metalness = 0
       break
     case 'fabric':
-      pigment = tint(color, '#5e6060', 0.28)
+      pigment = tint(color, '#b0a898', 0.22)
       grain = grains.matte
       bumpScale = 0.011
       roughness = 0.89
       metalness = 0
       break
     case 'metal':
-      pigment = '#9b9b97'
+      pigment = '#a39e91'
       grain = null
-      roughness = 0.34
-      metalness = 0.58
+      roughness = 0.53
+      metalness = 0.32
       break
     case 'hole':
       pigment = tint('#202223', color, 0.065)
@@ -105,6 +107,10 @@ function PieceMaterial({ piece, config, state, grains, labels, sideArtwork }: Su
       roughness = 0.77
       metalness = 0
       break
+    case 'referenceMark':
+      map = referencePrint
+      pigment = '#ffffff'
+      break
     case 'outerMark':
     case 'innerMark': {
       const embroidery = config.advanced && config.craft === 'embroidery'
@@ -126,7 +132,7 @@ function PieceMaterial({ piece, config, state, grains, labels, sideArtwork }: Su
       break
     case 'insoleMark':
       map = labels.insole
-      pigment = '#deded3'
+      pigment = ink(color)
       break
     case 'tongueTag':
       map = labels.tongue
@@ -146,7 +152,7 @@ function PieceMaterial({ piece, config, state, grains, labels, sideArtwork }: Su
     metalness = 0
     roughness = 0.79
   }
-  const highlight = state === 'selected' ? 0.105 : state === 'hovered' ? 0.043 : 0
+  const highlight = state === 'selected' ? 0.044 : state === 'hovered' ? 0.02 : 0
   return (
     <meshStandardMaterial
       color={pigment}
@@ -169,16 +175,17 @@ function PieceMaterial({ piece, config, state, grains, labels, sideArtwork }: Su
 }
 
 export default function ShoeModel({ config, selected, onSelect }: Props) {
-  const body = useMemo(() => buildShoe(config.silhouette), [config.silhouette])
+  const body = useMemo(() => buildShoe(config.silhouette, config.colorway), [config.silhouette, config.colorway])
   const laces = useMemo(
-    () => buildLacing(config.silhouette, config.laceType),
-    [config.silhouette, config.laceType],
+    () => buildLacing(config.silhouette, config.laceType, config.colorway),
+    [config.silhouette, config.laceType, config.colorway],
   )
   useEffect(() => () => body.forEach((p) => p.geometry.dispose()), [body])
   useEffect(() => () => laces.forEach((p) => p.geometry.dispose()), [laces])
   const grains = useGrains()
   const labels = useLabels(config.tongueScript)
   const sideArtwork = useSideArtwork(config)
+  const referencePrint = useReferencePrint(config)
   const [hovered, setHovered] = useState<PartId | null>(null)
 
   function pointer(event: ThreeEvent<PointerEvent>) {
@@ -208,13 +215,16 @@ export default function ShoeModel({ config, selected, onSelect }: Props) {
         if (finish === 'outerMark' && (!hasMark || config.placement === 'inner')) return null
         if (finish === 'innerMark' && (!hasMark || config.placement === 'outer')) return null
         if (finish === 'scriptTag' && config.tongueScript === 'none') return null
+        const print = finish === 'referenceMark' || finish === 'outerMark' || finish === 'innerMark'
         return (
           <mesh
             key={part + ':' + finish}
             name={part + '_' + finish}
             geometry={piece.geometry}
-            castShadow
+            castShadow={['surface','rubber','edge','lining','fabric','tread'].includes(finish)}
             receiveShadow
+            renderOrder={print ? (finish === 'referenceMark' ? 1 : 2) : 0}
+            raycast={print ? () => {} : undefined}
             userData={{ part }}
           >
             <PieceMaterial
@@ -223,6 +233,7 @@ export default function ShoeModel({ config, selected, onSelect }: Props) {
               grains={grains}
               labels={labels}
               sideArtwork={sideArtwork}
+              referencePrint={referencePrint}
               state={selected === part ? 'selected' : hovered === part ? 'hovered' : ''}
             />
           </mesh>

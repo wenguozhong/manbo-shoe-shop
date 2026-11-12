@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Minus, Plus, Trash2 } from 'lucide-react'
 import { useShop } from '../domain/store'
+import { defaultStyle, styleName } from '../domain/styles'
 import { productImage } from '../data/content'
 import { Action, Eyebrow, IconBtn } from '../ui/Common'
 export default function Bag() {
@@ -17,7 +18,7 @@ export default function Bag() {
       </h1>
       {!bag.length ? (
         <div className="empty-bag">
-          <img src={productImage('origin')} alt="Bone-white Court 01 in the Origin colorway" />
+          <img src={productImage(defaultStyle)} alt="Ivory and forest-green Rallyco Classic" />
           <div>
             <h2>Your bag is empty.</h2>
             <p>Design your first pair in the studio, then add it to your demo bag.</p>
@@ -33,10 +34,10 @@ export default function Bag() {
                 <article className="bag-item" key={item.id}>
                   <img
                     src={item.preview || productImage(c.colorway)}
-                    alt={c.sideText || c.colorway + ' sneaker preview'}
+                    alt={c.sideText || styleName(c.colorway) + ' sneaker preview'}
                   />
                   <div className="bag-details">
-                    <p className="overline">COURT 01 / {c.colorway.toUpperCase()}</p>
+                    <p className="overline">COURT 01 / {styleName(c.colorway)}</p>
                     <h2>{c.sideText || 'IDC COURT 01'}</h2>
                     <p>
                       EU {c.size} · {c.laceType.toUpperCase()} laces ·{' '}

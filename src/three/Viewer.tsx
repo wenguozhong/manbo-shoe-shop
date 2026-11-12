@@ -16,19 +16,20 @@ import { CanvasTexture, Vector3, type PerspectiveCamera, type Scene, type WebGLR
 import { RotateCcw } from 'lucide-react'
 import type { PartId, ShoeConfig } from '../domain/config'
 import { productImage } from '../data/content'
+import { styleName } from '../domain/styles'
 import ModelAdapter from './GlbModel'
 
 export const views = ['default', 'side', 'inner', 'top', 'heel', 'sole', 'tongue', 'inside'] as const
 export type View = (typeof views)[number]
 const directions: Record<View, [number, number, number]> = {
-  default: [2.35, 1.75, 5.15],
-  side: [0, 0.25, 5],
-  inner: [0, 0.25, -5],
-  top: [0, 5, 0.01],
-  heel: [-5, 0.58, 0.02],
-  sole: [0, -5, 0.01],
+  default: [2.17, 2.07, -5.85],
+  side: [0, 0.18, -5],
+  inner: [0, 0.18, 5],
+  top: [0, 5, -0.01],
+  heel: [-5, 0.58, -0.02],
+  sole: [0, -5, -0.01],
   tongue: [2.1, 4.3, 0.1],
-  inside: [-3.3, 4.8, 0.5],
+  inside: [-3.3, 4.8, -0.5],
 }
 type Painting = { gl: WebGLRenderer; scene: Scene; camera: PerspectiveCamera }
 export interface ViewerApi {
@@ -77,17 +78,19 @@ function ContactShadow() {
     </mesh>
   )
 }
-const center = new Vector3(0, 0.59, 0)
+const center = new Vector3(0, 0.68, 0)
 function CameraRig({
   view,
   revision,
   interactive,
+  external,
   onPaint,
   onLost,
 }: {
   view: View
   revision: number
   interactive: boolean
+  external: boolean
   onPaint: (p: Painting) => void
   onLost: () => void
 }) {
@@ -101,7 +104,9 @@ function CameraRig({
       1.26 / vertical,
       2.22 / (vertical * Math.max(0.2, size.width / size.height)),
     )
-    const v = new Vector3(...directions[view]).normalize().multiplyScalar(distance).add(center)
+    const v = new Vector3(...directions[view])
+    if (external) v.z *= -1 // Imported Court 01 assets use +Z for the outer quarter.
+    v.normalize().multiplyScalar(distance).add(center)
     if (first.current || matchMedia('(prefers-reduced-motion: reduce)').matches) {
       camera.position.copy(v)
       camera.lookAt(center)
@@ -109,7 +114,7 @@ function CameraRig({
     } else target.current = v
     first.current = false
     invalidate()
-  }, [view, revision, camera, invalidate, size.width, size.height])
+  }, [view, revision, camera, invalidate, size.width, size.height, external])
   useFrame((_, dt) => {
     if (target.current) {
       camera.position.lerp(target.current, 1 - Math.exp(-Math.min(dt, 0.12) * 13))
@@ -159,7 +164,8 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
   const [lost, setLost] = useState(false),
     [generation, setGeneration] = useState(0),
     [ready, setReady] = useState(false),
-    [message, setMessage] = useState('')
+    [message, setMessage] = useState(''),
+    [external, setExternal] = useState(false)
   const painting = useRef<Painting | null>(null)
   const onPaint = useCallback((p: Painting) => {
     painting.current = p
@@ -168,11 +174,14 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
   const onLost = useCallback(() => {
     painting.current = null
     setReady(false)
+    setExternal(false)
+    setMessage('')
     setLost(true)
   }, [])
   const report = useCallback(
-    (message: string, missing: PartId[]) => {
+    (message: string, missing: PartId[], isExternal = false) => {
       setMessage(message)
+      setExternal(isExternal)
       onMissing?.(missing)
     },
     [onMissing],
@@ -207,7 +216,7 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
     <div className="viewer-fallback">
       <img
         src={productImage(config.colorway)}
-        alt={'2D preview of the ' + config.colorway.toUpperCase() + ' colorway'}
+        alt={'2D preview of ' + styleName(config.colorway)}
       />
       <div>
         <b>2D colorway preview</b>
@@ -239,8 +248,9 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
         <SceneBoundary key={generation} fallback={fallback}>
           <Canvas
             frameloop="demand"
+            shadows="soft"
             dpr={[1, 1.6]}
-            camera={{ position: [2.3, 2.2, 5.4], fov: 34, near: 0.1, far: 60 }}
+            camera={{ position: [1.4, 1.9, -5.9], fov: 34, near: 0.1, far: 60 }}
             gl={{
               antialias: true,
               alpha: false,
@@ -253,15 +263,29 @@ const Viewer = forwardRef<ViewerApi, ViewerProps>(function Viewer(
             }}
           >
             <color attach="background" args={['#f0f0ed']} />
-            <hemisphereLight args={['#ffffff', '#b4b0a6', 1.5]} />
-            <directionalLight position={[3, 6, 4]} intensity={2.45} />
-            <directionalLight position={[-3, 3, -3]} intensity={1.45} color="#e8ecff" />
+            <hemisphereLight args={['#fffdf9', '#aca698', 1.30]} />
+            <directionalLight
+              position={[2.5, 5.8, -4.25]}
+              intensity={2.1}
+              castShadow
+              shadow-mapSize={[1024,1024]}
+              shadow-camera-left={-2.45}
+              shadow-camera-right={2.45}
+              shadow-camera-top={2.1}
+              shadow-camera-bottom={-1.35}
+              shadow-camera-near={0.5}
+              shadow-camera-far={12}
+              shadow-normalBias={0.012}
+              shadow-bias={-0.0002}
+            />
+            <directionalLight position={[-3.8, 3.4, 2.7]} intensity={1.03} color="#f1f4ff" />
             <ContactShadow />
             <ModelAdapter config={config} selected={selected} onSelect={onSelect} onReport={report} />
             <CameraRig
               view={view}
               revision={revision}
               interactive={interactive}
+              external={external}
               onPaint={onPaint}
               onLost={onLost}
             />

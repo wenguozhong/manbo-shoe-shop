@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { Search, Bookmark, ShoppingBag, Menu, X, ArrowRight, ArrowUpRight, Trash2 } from 'lucide-react'
 import { Brand, Dialog, IconBtn, Toast } from './Common'
 import { articles, notice, productImage, slogan, variants } from '../data/content'
+import { defaultStyle, readStyle, styleName } from '../domain/styles'
 import { useShop } from '../domain/store'
 
 const nav = [
@@ -14,7 +15,6 @@ const nav = [
 const pageTitles: Record<string, string> = {
   '/': 'The Queen’s Craft',
   '/collection': 'Collection',
-  '/product/court-01': 'IDC COURT 01',
   '/customize': 'Sneaker Studio',
   '/bag': 'My Bag',
   '/story': 'The Story',
@@ -46,7 +46,7 @@ function Finder({ close }: { close: () => void }) {
         <input
           autoFocus
           aria-label="Search sneakers and stories"
-          placeholder="Search colorways, sneakers or stories"
+          placeholder="Search editions, sneakers or stories"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -61,7 +61,7 @@ function Finder({ close }: { close: () => void }) {
             <ArrowUpRight size={18} />
           </Link>
         ))}
-        {!matches.length && <p>No matches. Try “Volt” or “court”.</p>}
+        {!matches.length && <p>No matches. Try “Rallyco” or “sage”.</p>}
       </div>
     </>
   )
@@ -93,7 +93,7 @@ function Saved({ close }: { close: () => void }) {
           >
             <b>{d.config.sideText || 'COURT 01'}</b>
             <small>
-              {d.config.colorway.toUpperCase()} / EU {d.config.size}
+              {styleName(d.config.colorway)} / EU {d.config.size}
             </small>
             <span>Load design ↗</span>
           </button>
@@ -187,10 +187,11 @@ export function Layout() {
       prevPath.current = path
     }
     const route = path.replace(/\/+$/, '') || '/'
-    const title =
-      pageTitles[route.toLowerCase()] ??
-      articles.find((article) => route === '/journal/' + article.id)?.title ??
-      'Page Not Found'
+    const title = route.toLowerCase() === '/product/court-01'
+      ? styleName(readStyle(new URLSearchParams(location.search).get('color')) ?? defaultStyle)
+      : pageTitles[route.toLowerCase()] ??
+        articles.find((article) => route === '/journal/' + article.id)?.title ??
+        'Page Not Found'
     document.title = 'idc. — ' + title
   }, [location])
   const close = () => setOverlay(null)

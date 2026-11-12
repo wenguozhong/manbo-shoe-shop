@@ -2,23 +2,25 @@ import { lazy, Suspense, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { ArrowRight, Box, ChevronRight, ShoppingBag } from 'lucide-react'
 import { useShop } from '../domain/store'
-import { createConfig, readColor, sizes, type Colorway, type ShoeConfig } from '../domain/config'
-import { hook, productImage, variants } from '../data/content'
+import { createConfig, readColor, sizes, type ShoeConfig } from '../domain/config'
+import { defaultStyle, styleCatalog, styleName, type StyleId } from '../domain/styles'
+import { hook, productImage } from '../data/content'
 import { Action, Dialog, Eyebrow, Gifts } from '../ui/Common'
-import { Options } from '../studio/Fields'
+import { Options, StylePicker } from '../studio/Fields'
+import { DesignReference } from '../ui/DesignReference'
 import type { ViewerApi, View } from '../three/Viewer'
 const Viewer = lazy(() => import('../three/Viewer'))
 export default function Product() {
   const [query, setQuery] = useSearchParams(),
-    color = readColor(query.get('color')) ?? 'origin'
+    color = readColor(query.get('color')) ?? defaultStyle
   const [size, setSize] = useState<ShoeConfig['size']>('40'),
     [view, setView] = useState<View>('default'),
     [revision, setRevision] = useState(0),
     [macro, setMacro] = useState(false),
     viewer = useRef<ViewerApi>(null)
   const config = { ...createConfig(color), size },
-    variant = variants.find((v) => v.id === color)!
-  function select(v: Colorway) {
+    variant = styleCatalog[color]
+  function select(v: StyleId) {
     setQuery({ color: v }, { replace: true })
   }
   return (
@@ -26,7 +28,7 @@ export default function Product() {
       <div className="wrap product-page">
         <nav className="crumbs" aria-label="Breadcrumb">
           <Link to="/collection">COLLECTION</Link>
-          <ChevronRight size={12} /> COURT 01
+          <ChevronRight size={12} /> {styleName(color)}
         </nav>
         <section className="product-layout">
           <div className="product-stage">
@@ -38,7 +40,7 @@ export default function Product() {
                 <img
                   className="product-poster"
                   src={productImage(color)}
-                  alt={variant.name + ' in ' + variant.tone}
+                  alt={styleName(color) + ' in ' + variant.tone}
                 />
               }
             >
@@ -70,23 +72,17 @@ export default function Product() {
           <div className="product-info">
             <Eyebrow>THE QUEEN’S CRAFT</Eyebrow>
             <h1 className="display">
-              IDC
+              {variant.family}
               <br />
-              COURT 01<span className="blue">.</span>
+              <em>{variant.name}</em>
+              <span className="blue">.</span>
             </h1>
             <div className="product-info-line">
-              <b>{variant.name}</b>
+              <b>IDC COURT 01</b>
               <span>{variant.tone}</span>
             </div>
             <p>{variant.description}</p>
-            <div className="product-swatches" aria-label="Product colorways">
-              {variants.map((v) => (
-                <button key={v.id} aria-pressed={v.id === color} onClick={() => select(v.id)}>
-                  <i style={{ background: v.chips[0] }} />
-                  {v.name}
-                </button>
-              ))}
-            </div>
+            <StylePicker value={color} select={select} />
             <Options label="Size / EU (demo)" items={sizes} value={size} select={setSize} />
             <Link className="action" to={'/customize?color=' + color + '&size=' + size}>
               CUSTOMIZE YOUR PAIR <ArrowRight size={16} />
@@ -102,20 +98,16 @@ export default function Product() {
             </button>
             <small>Student collaboration proposal. Sizes are for preview only.</small>
             <button className="text-link" onClick={() => setMacro(true)}>
-              View lacing and stitching up close <ArrowRight size={14} />
+              View the design reference <ArrowRight size={14} />
             </button>
           </div>
         </section>
         {macro && (
-          <Dialog title="Craft study" onClose={() => setMacro(false)}>
-            <img
-              src="/images/detail.webp"
-              alt="Close-up of blue suede eyelets, woven laces and stitching on ivory leather"
-            />
-            <p>
-              The electric blue eyestay meets the pale upper. Look closely to see the direction of the
-              stitching and the weave of the laces.
-            </p>
+          <Dialog title={styleName(color)} onClose={() => setMacro(false)}>
+            <DesignReference id={color} view="profile" />
+            <h3>Outer panel detail</h3>
+            <DesignReference id={color} view="detail" />
+            <p>{variant.description}</p>
           </Dialog>
         )}
         <div className="product-story">

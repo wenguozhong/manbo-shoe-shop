@@ -28,7 +28,7 @@ interface Loaded {
   meshes: Mesh[]
   dispose: () => void
 }
-type Report = (message: string, missing: PartId[]) => void
+type Report = (message: string, missing: PartId[], external?: boolean) => void
 function prepare(source: Group, map: Definition['partMap']): Loaded {
   const mapped = new Map<Mesh, PartId>(),
     materials = new Set<Material>(),
@@ -168,7 +168,7 @@ export default function ModelAdapter({
         return
       }
       const missing = partIds.filter((id) => ![...asset!.mapped.values()].includes(id))
-      onReport(missing.length ? 'Some parts of this model are unavailable for editing.' : '', missing)
+      onReport(missing.length ? 'Some parts of this model are unavailable for editing.' : '', missing, true)
       setLoaded(asset)
     }
     load().catch(() => {

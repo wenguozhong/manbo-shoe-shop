@@ -131,7 +131,7 @@ export function ProductCard({ variant: v }: { variant: (typeof variants)[number]
         to={'/product/court-01?color=' + v.id}
         aria-label={'View COURT 01 ' + v.name}
       >
-        <img loading="lazy" src={productImage(v.id)} alt={'IDC COURT 01 in ' + v.tone} />
+        <img loading="lazy" src={productImage(v.id)} alt={v.name + ' in ' + v.tone} />
         <span className="card-arrow">
           <ArrowUpRight size={18} />
         </span>

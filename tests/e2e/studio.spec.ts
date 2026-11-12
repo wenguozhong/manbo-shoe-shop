@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 import { changed, config, frame, markImage, noOverflow, noteErrors, ready, shot, shots } from './helpers'
 import path from 'node:path'
+import { families, styleIds, styleCatalog, styleName } from '../../src/domain/styles'
 
 const button = (page: Page, name: string) => page.getByRole('button', { name, exact: true })
 async function jsonFile(page: Page) {
@@ -18,14 +19,16 @@ test('real 3D customization, files, snapshots, gallery and bag editing', async (
   await ready(page)
   await noOverflow(page)
   await shot(page, 'studio-desktop')
-  await shot(page, 'colorway-origin')
+  await shot(page, 'rallyco-classic')
   let before = await frame(page)
   await button(page, 'BOLD LOW').click()
   await changed(page, before)
   before = await frame(page)
-  await button(page, 'VOLT').click()
+  await button(page, 'Topspin').click()
+  await button(page, 'Topspin Rally').click()
   await changed(page, before)
-  await shot(page, 'colorway-volt')
+  await shot(page, 'topspin-rally')
+  await page.getByRole('textbox', { name: 'Upper color HEX' }).fill('#214CD4')
   // Pick a saturated blue surface directly in WebGL. First clear the part on the backdrop.
   const canvas = page.locator('.viewer canvas')
   await canvas.click({ position: { x: 14, y: 65 } })
@@ -164,7 +167,7 @@ test('real 3D customization, files, snapshots, gallery and bag editing', async (
     buffer: Buffer.from('{"model":"invalid"}'),
   })
   await expect(page.locator('.toast')).toContainText('Incompatible design file')
-  expect((await config(page)).colorway).toBe('origin')
+  expect((await config(page)).colorway).toBe('rallyco-classic')
   await input.setInputFiles({
     name: 'large.json',
     mimeType: 'application/json',
@@ -210,4 +213,29 @@ test('real 3D customization, files, snapshots, gallery and bag editing', async (
   await button(page, 'Delete saved design').click()
   await expect(page.locator('.dialog-empty')).toBeVisible()
   expect(errors).toEqual([])
+})
+
+test('renders every board edition and restores the selected style', async ({ page }) => {
+  await page.goto('/customize?color=rallyco-classic')
+  await ready(page)
+  const rendered = new Set<string>()
+  for (const family of families) {
+    await page
+      .getByRole('group', { name: 'Series', exact: true })
+      .getByRole('button', { name: family, exact: true })
+      .click()
+    for (const id of styleIds.filter((key) => styleCatalog[key].family === family)) {
+      const edition = button(page, styleName(id))
+      await edition.click()
+      await expect(edition).toHaveAttribute('aria-pressed', 'true')
+      await expect(page.locator('.stage-top')).toContainText(styleName(id))
+      await expect.poll(() => config(page).then((c) => c.colorway)).toBe(id)
+      await expect.poll(async () => !rendered.has(await frame(page))).toBe(true)
+      rendered.add(await frame(page))
+    }
+  }
+  expect(rendered.size).toBe(9)
+  await page.reload()
+  await ready(page)
+  await expect(button(page, 'Volley Rallyco')).toHaveAttribute('aria-pressed', 'true')
 })

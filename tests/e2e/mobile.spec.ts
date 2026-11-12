@@ -58,7 +58,7 @@ test('mobile navigation, real touch orbit and pinch, full four-step design and s
   ])
   await touch('touchEnd', [])
   await changed(page, second)
-  await page.getByRole('button', { name: 'SHADOW', exact: true }).tap()
+  await page.getByRole('button', { name: 'Volley', exact: true }).tap()
   await page.getByRole('button', { name: 'Next / DETAILS' }).tap()
   await expectEnglishPage(page)
   await page.getByRole('button', { name: 'ROPE', exact: true }).tap()
@@ -73,7 +73,7 @@ test('mobile navigation, real touch orbit and pinch, full four-step design and s
   await expect(page.locator('.bag-details')).toContainText('球场')
   await page.goto('/customize?color=unknown')
   await ready(page)
-  expect((await config(page)).colorway).toBe('origin')
+  expect((await config(page)).colorway).toBe('rallyco-classic')
   for (const width of [360, 768, 1024]) {
     await page.setViewportSize({ width, height: 844 })
     await noOverflow(page)

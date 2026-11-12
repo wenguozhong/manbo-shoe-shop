@@ -1,4 +1,4 @@
-import type { Colorway } from '../domain/config'
+import { styleCatalog, styleIds, styleName, type StyleId } from '../domain/styles'
 
 export const series = 'THE QUEEN’S CRAFT'
 export const slogan =
@@ -6,43 +6,11 @@ export const slogan =
 export const hook = 'Meet the Queen’s craft — built for play, made to collect.'
 export const notice =
   'Student business competition concept. The proposed collaboration with Zheng Qinwen has no official endorsement. The shoes are for display only.'
-export const variants: {
-  id: Colorway
-  name: string
-  tone: string
-  description: string
-  chips: string[]
-  filter: string
-}[] = [
-  {
-    id: 'origin',
-    name: 'ORIGIN',
-    tone: 'Bone / Chalk',
-    description:
-      'Bone and chalk give the upper the look of unbleached canvas. Add your first mark to the side panel.',
-    chips: ['#eae7db', '#cac5b7', '#292b2a'],
-    filter: 'LIGHT',
-  },
-  {
-    id: 'volt',
-    name: 'VOLT',
-    tone: 'Electric / Cobalt',
-    description:
-      'A sweep of electric blue catches the moment of impact. The pale side panel traces the turn that follows.',
-    chips: ['#1533e8', '#162776', '#eef0ec'],
-    filter: 'BLUE',
-  },
-  {
-    id: 'shadow',
-    name: 'SHADOW',
-    tone: 'Graphite / Ash',
-    description:
-      'A graphite upper meets an ash-gray cupsole, with a flash of blue to catch the light as you turn a corner.',
-    chips: ['#282b30', '#c8c9c6', '#41519e'],
-    filter: 'DARK',
-  },
-]
-export const productImage = (color: Colorway) => '/images/court-01-' + color + '.webp'
+export const variants = styleIds.map((id) => {
+  const { family, tone, description, colors } = styleCatalog[id]
+  return { id, family, name: styleName(id), tone, description, chips: [colors[7], colors[0], colors[6]] }
+})
+export const productImage = (id: StyleId) => '/images/court-01-' + id + '.webp'
 export const articles = [
   {
     id: 'beyond-the-lines',
@@ -62,8 +30,8 @@ export const articles = [
     category: 'PROCESS',
     title: 'The making of Court 01.',
     kicker: 'From outline to stitch',
-    image: '/images/detail.webp',
-    alt: 'Stitching and panels on the Court 01 concept low-top',
+    image: productImage('rallyco-classic'),
+    alt: 'The Rallyco Classic low-top with forest-green trim and a tennis mascot',
     paras: [
       'Our first sketch was a side view. One continuous line joined the toe, tongue and heel. A flatter line underneath closed the sole. The space between them set the height over the instep and the amount of room we could leave for artwork on the side.',
       'In the 3D studio, we divided the shoe into eight parts you can edit separately. Give the toe a suede finish and the light softens across it. Change the midsole color and the same low profile can look heavier, even though its shape stays the same.',
@@ -90,7 +58,7 @@ export const productNotes = [
   {
     label: 'IDENTITY',
     title: 'Make the side panel yours.',
-    body: 'The uninterrupted side panel leaves room for lettering, graphics and color. Place your mark on the inside, outside or both.',
+    body: 'Keep the factory wordmark or add your own lettering beside the tennis artwork. Place your mark on the inside, outside or both.',
   },
   {
     label: 'CRAFT',

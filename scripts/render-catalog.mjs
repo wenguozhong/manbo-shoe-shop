@@ -7,8 +7,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)))
 const output = join(root, 'public', 'images')
-const variants = ['shadow', 'origin', 'volt']
-const filenames = variants.map((color) => 'court-01-' + color + '.webp')
+const filenames = []
 const directory = await mkdtemp(join(root, '.catalog-render-'))
 const entry = join(directory, 'index.html')
 const pageSource = `<!doctype html>
@@ -36,7 +35,7 @@ const pageSource = `<!doctype html>
 </body>
 </html>`
 
-// Frame the dark colorway first and reuse its bounds for the entire collection.
+// Use the first edition to keep framing consistent across the collection.
 async function frameProduct(bounds) {
   await document.fonts.ready
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
@@ -117,6 +116,8 @@ try {
   })
   page.on('pageerror', (error) => console.error(error.message))
   const address = new URL(basename(directory) + '/index.html', server.resolvedUrls.local[0])
+  const { styleIds: variants } = await server.ssrLoadModule('/src/domain/styles.ts')
+  filenames.push(...variants.map((id) => 'court-01-' + id + '.webp'))
   let bounds = null
   for (const [i, color] of variants.entries()) {
     address.searchParams.set('color', color)

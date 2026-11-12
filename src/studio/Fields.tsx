@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Check } from 'lucide-react'
 import { hex } from '../domain/config'
+import { families, styleCatalog, styleIds, styleName, type StyleId } from '../domain/styles'
 
 export function Field({ label, children, hint }: { label: string; children: ReactNode; hint?: string }) {
   return (
@@ -34,6 +35,51 @@ export function Options<T extends string>({
         ))}
       </div>
     </Field>
+  )
+}
+export function StylePicker({ value, select }: { value: StyleId; select: (id: StyleId) => void }) {
+  const family = styleCatalog[value].family
+  return (
+    <>
+      <Field label="Series">
+        <div className="option-group">
+          {families.map((name) => (
+            <button
+              type="button"
+              key={name}
+              aria-pressed={family === name}
+              onClick={() => {
+                const first = styleIds.find((id) => styleCatalog[id].family === name)
+                if (name !== family && first) select(first)
+              }}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      </Field>
+      <Field label="Edition">
+        <div className="variant-picks">
+          {styleIds
+            .filter((id) => styleCatalog[id].family === family)
+            .map((id) => (
+              <button
+                type="button"
+                key={id}
+                aria-label={styleName(id)}
+                aria-pressed={id === value}
+                onClick={() => {
+                  if (id !== value) select(id)
+                }}
+              >
+                <i style={{ background: styleCatalog[id].colors[7] }} />
+                {styleCatalog[id].name}
+                {id === value && <Check size={13} />}
+              </button>
+            ))}
+        </div>
+      </Field>
+    </>
   )
 }
 const commonColors = [

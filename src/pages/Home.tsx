@@ -4,67 +4,49 @@ import { ArrowLeft, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react
 import { Action, Eyebrow, Gifts, ProductCard, TextLink } from '../ui/Common'
 import { articles, hook, productImage, productNotes, variants } from '../data/content'
 import type { Colorway } from '../domain/config'
+import { families, featuredStyles, styleName, styleCatalog } from '../domain/styles'
+import { DesignReference } from '../ui/DesignReference'
 
 const campaign = [
   {
-    image: '/images/hero.webp',
-    alt: 'A tennis player swings a racket across a sunlit court',
-    lines: ['THE COURT', 'IS ONLY THE', 'BEGINNING.'],
-    label: 'COURT CULTURE',
-    caption: 'Sport is the start. Style is yours.',
+    image: '/images/campaign-queens-design.jpg',
+    width: 872,
+    height: 1158,
+    alt: 'A tennis player follows through across a white court line. Blue lettering reads “Meet the Queen’s Design.”',
+    lines: ['THE QUEEN’S', 'CRAFT.'],
+    label: 'IDC COURT 01',
+    caption: 'Design your own tennis-inspired low-top. Start with a pair from Rallyco, Topspin or Volley.',
     cta: 'CUSTOMIZE YOUR PAIR',
     url: '/customize',
-    position: '76% center',
   },
   {
-    image: '/images/detail.webp',
-    alt: 'Laces and stitching on a Court 01 low-top',
-    lines: ['BUILT TO', 'MOVE. MADE', 'TO BE YOURS.'],
-    label: 'DESIGN STUDY',
-    caption: 'The Queen’s Craft / IDC Court 01.',
-    cta: 'EXPLORE COURT 01',
-    url: '/product/court-01',
-    position: '65% center',
-  },
-  {
-    image: '/images/journal-style.webp',
-    alt: 'Low-top sneakers styled for the street',
-    lines: ['YOUR PAIR.', 'YOUR', 'STORY.'],
-    label: 'STREET STYLE',
-    caption: 'From court energy to everyday culture.',
+    image: '/images/campaign-brand-board.jpg',
+    width: 1642,
+    height: 1032,
+    alt: 'The idc. brand concept board pairs a blue wordmark with the tennis poster and the line “Play your way.”',
+    lines: ['PLAY YOUR', 'WAY.'],
+    label: 'IDC BRAND CONCEPT',
+    caption: 'Our campaign pairs an electric-blue wordmark with a player caught at full stretch.',
     cta: 'READ THE STORY',
-    url: '/journal/your-pair-your-story',
-    position: '70% center',
+    url: '/story',
   },
 ]
 function Hero() {
-  const [index, setIndex] = useState(0),
-    item = campaign[index]
+  const [index, setIndex] = useState(0)
+  const item = campaign[index]
   return (
-    <section className="hero" aria-roledescription="carousel" aria-label="Campaign highlights">
-      <img
-        className={'hero-photo slide-' + index}
-        src={item.image}
-        alt={item.alt}
-        fetchPriority="high"
-        style={{ objectPosition: item.position }}
-      />
-      <div className="hero-shade" />
+    <section className="hero" aria-roledescription="carousel" aria-label="Campaign posters">
       <div className="wrap hero-inner">
-        <div className="hero-copy" key={index}>
+        <div className="hero-copy">
           <div className="hero-kicker">
             <i />
             {item.label}
-            <b>/</b> CONCEPT SERIES
           </div>
           <h1 className="hero-title">
-            {item.lines.map((line, i) => (
-              <span key={line} className={i === 2 ? 'italic' : ''}>
-                {line}
-              </span>
-            ))}
+            <span>{item.lines[0]} </span>
+            <em>{item.lines[1]}</em>
           </h1>
-          <p>{item.caption}</p>
+          <p className="hero-caption">{item.caption}</p>
           <div className="hero-actions">
             <Action to={item.url}>{item.cta}</Action>
             <Link className="hero-secondary" to="/collection">
@@ -72,25 +54,37 @@ function Hero() {
             </Link>
           </div>
         </div>
+        <div className="hero-art">
+          <img
+            className="hero-photo"
+            src={item.image}
+            width={item.width}
+            height={item.height}
+            alt={item.alt}
+            fetchPriority={index === 0 ? 'high' : 'auto'}
+          />
+        </div>
         <div className="hero-bottom">
-          <div className="edition">
-            <span className="index-line" />
-            <span>THE QUEEN’S CRAFT</span>
-            <b>/</b>
-            <span>IDC COURT 01</span>
-          </div>
           <div className="slide-controls">
-            <span aria-live="polite">
-              0{index + 1}
-              <small> / 03</small>
-            </span>
-            <button aria-label="Previous slide" onClick={() => setIndex((index + 2) % 3)}>
+            <button
+              aria-label="Previous slide"
+              onClick={() => setIndex((current) => (current + campaign.length - 1) % campaign.length)}
+            >
               <ChevronLeft size={17} />
             </button>
-            <button aria-label="Next slide" onClick={() => setIndex((index + 1) % 3)}>
+            <span aria-live="polite" aria-atomic="true">
+              0{index + 1}<small> / 0{campaign.length}</small>
+            </span>
+            <button
+              aria-label="Next slide"
+              onClick={() => setIndex((current) => (current + 1) % campaign.length)}
+            >
               <ChevronRight size={17} />
             </button>
           </div>
+          <a className="hero-full" href={item.image} target="_blank" rel="noreferrer">
+            View full poster <ArrowUpRight size={15} />
+          </a>
         </div>
       </div>
     </section>
@@ -117,7 +111,7 @@ export function JournalCards() {
   )
 }
 function Teaser() {
-  const [color, setColor] = useState<Colorway>('volt')
+  const [color, setColor] = useState<Colorway>('topspin-rally')
   return (
     <section className="studio-teaser">
       <div className="wrap teaser-inner">
@@ -129,18 +123,18 @@ function Teaser() {
             <em>Your rules.</em>
           </h2>
           <p className="body-copy">
-            Start with a colorway. Choose your materials, add lettering to the side panel and turn the
+            Start with a tennis edition. Choose your materials, add lettering to the side panel and turn the
             shoe to see your design from every angle.
           </p>
           <Action to={'/customize?color=' + color}>ENTER THE DESIGN STUDIO</Action>
         </div>
         <div className="teaser-preview">
-          <img loading="lazy" src={productImage(color)} alt={'Court 01 in ' + color.toUpperCase()} />
-          <div className="preview-choices" aria-label="Preview a colorway">
-            {variants.map((v) => (
-              <button key={v.id} aria-pressed={color === v.id} onClick={() => setColor(v.id)}>
-                <i style={{ background: v.chips[0] }} />
-                {v.name}
+          <img loading="lazy" src={productImage(color)} alt={styleName(color) + ' three-quarter view'} />
+          <div className="preview-choices" aria-label="Preview a series">
+            {featuredStyles.map((id) => (
+              <button key={id} aria-label={styleName(id)} aria-pressed={color === id} onClick={() => setColor(id)}>
+                <i style={{ background: styleCatalog[id].colors[7] }} />
+                {styleCatalog[id].family}
               </button>
             ))}
           </div>
@@ -155,36 +149,35 @@ export default function Home() {
       <Hero />
       <section className="wrap signature">
         <div className="section-rail">
-          <Eyebrow>SIGNATURE MODEL</Eyebrow>
+          <Eyebrow>SIGNATURE EDITION</Eyebrow>
           <TextLink to="/collection">VIEW COLLECTION</TextLink>
         </div>
         <div className="signature-grid">
           <div className="signature-copy">
             <p className="overline">THE QUEEN’S CRAFT</p>
             <h2 className="display">
-              IDC
+              Rallyco
               <br />
-              COURT 01<span className="blue">.</span>
+              Classic<span className="blue">.</span>
             </h2>
             <p className="body-copy">
-              A court-inspired low-top for the street, with details you can change from the laces to the
-              sole.
+              Forest-green trim, an ivory leather upper and a tiny racket-carrying mascot. Turn the shoe to see how the drawing wraps around the heel.
             </p>
             <TextLink to="/product/court-01">VIEW THE PRODUCT</TextLink>
           </div>
-          <Link to="/product/court-01?color=volt" className="signature-photo">
+          <Link to="/product/court-01?color=rallyco-classic" className="signature-photo">
             <img
               loading="lazy"
-              src={productImage('volt')}
-              alt="Three-quarter view of the electric blue IDC COURT 01"
+              src={productImage('rallyco-classic')}
+              alt="Three-quarter view of the forest-green and ivory Rallyco Classic"
             />
-            <span>VOLT / ELECTRIC BLUE</span>
+            <span>RALLYCO CLASSIC / FOREST</span>
             <ArrowUpRight />
           </Link>
-          <Link to="/journal/making-court-01" className="signature-detail">
-            <img loading="lazy" src="/images/detail.webp" alt={articles[1].alt} />
+          <Link to="/product/court-01?color=rallyco-classic" className="signature-detail">
+            <DesignReference id="rallyco-classic" view="detail" />
             <span>
-              CRAFT STUDY <ArrowUpRight size={14} />
+              PANEL DETAIL <ArrowUpRight size={14} />
             </span>
           </Link>
         </div>
@@ -192,16 +185,16 @@ export default function Home() {
       <section className="wrap section">
         <div className="section-rail">
           <Eyebrow>THE COLLECTION</Eyebrow>
-          <span className="overline">03 COLORWAYS</span>
+          <TextLink to="/collection">VIEW ALL NINE EDITIONS</TextLink>
         </div>
         <div className="heading-row">
           <h2 className="display subhead">
-            Choose your <em>colorway.</em>
+            Choose your <em>series.</em>
           </h2>
-          <span className="muted">One silhouette. Three starting points.</span>
+          <span className="muted">One edition from each of our three tennis series.</span>
         </div>
         <div className="product-grid">
-          {variants.map((v) => (
+          {variants.filter((v) => featuredStyles.includes(v.id)).map((v) => (
             <ProductCard key={v.id} variant={v} />
           ))}
         </div>
@@ -270,18 +263,18 @@ export function Collection() {
         <em>somewhere.</em>
       </h1>
       <div className="filter-bar">
-        <div aria-label="Filter by color">
-          {['ALL', 'LIGHT', 'BLUE', 'DARK'].map((item) => (
+        <div aria-label="Filter by series">
+          {['ALL', ...families].map((item) => (
             <button key={item} aria-pressed={filter === item} onClick={() => setFilter(item)}>
               {item}
             </button>
           ))}
         </div>
-        <span>IDC COURT 01</span>
+        <span>{filter === 'ALL' ? '9' : '3'} EDITIONS</span>
       </div>
       <div className="product-grid">
         {variants
-          .filter((v) => filter === 'ALL' || v.filter === filter)
+          .filter((v) => filter === 'ALL' || v.family === filter)
           .map((v) => (
             <ProductCard key={v.id} variant={v} />
           ))}
